@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumen - Текст, который сияет</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1><i class="fas fa-sparkles"></i> LUMEN</h1>
+            <p class="tagline">Создай сияющую надпись для своего видео</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Область предпросмотра текста -->
+            <section class="preview-section">
+                <div class="preview-container" id="textPreview">
+                    <!-- Сюда будет вставляться текст -->
+                    <p id="displayText">Ваш текст появится здесь</p>
+                </div>
+            </section>
+
+            <!-- Панель управления -->
+            <section class="control-panel">
+                <div class="input-group">
+                    <label for="textInput"><i class="fas fa-font"></i> Ваш текст:</label>
+                    <textarea id="textInput" placeholder="Введите текст для красивого отображения..."></textarea>
+                </div>
+
+                <div class="controls-grid">
+                    <div class="control-group">
+                        <label for="fontSelect"><i class="fas fa-paint-brush"></i> Шрифт:</label>
+                        <select id="fontSelect">
+                            <option value="'Roboto', sans-serif">Стандартный</option>
+                            <option value="'Playfair Display', serif">Классический</option>
+                            <option value="'Courier New', monospace">Моноширинный</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="colorPicker"><i class="fas fa-palette"></i> Цвет:</label>
+                        <input type="color" id="colorPicker" value="#4a6cf7">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="sizeSlider"><i class="fas fa-text-height"></i> Размер: <span id="sizeValue">40</span>px</label>
+                        <input type="range" id="sizeSlider" min="20" max="100" value="40">
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="applyBtn" class="btn-primary">
+                        <i class="fas fa-magic"></i> Применить стиль
+                    </button>
+                    <button id="downloadBtn" class="btn-success">
+                        <i class="fas fa-download"></i> Скачать изображение
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <p>Создано с <i class="fas fa-heart"></i> для твоих видео</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
