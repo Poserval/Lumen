@@ -3,102 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumen - Анимация рукописного текста</title>
+    <title>Lumen - Рисование текста</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Подключаем шрифты: Roboto, Playfair Display и РУКОПИСНЫЙ Caveat -->
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Roboto:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- Подключаем анимационную библиотеку -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <!-- Подключаем библиотеку для работы со шрифтами -->
+    <script src="https://cdn.jsdelivr.net/npm/opentype.js@latest/dist/opentype.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="app-container">
-        <!-- Шапка приложения -->
         <header class="app-header">
-            <h1><i class="fas fa-sparkles"></i> LUMEN</h1>
-            <p class="tagline">Анимация рукописного текста для видео</p>
+            <h1><i class="fas fa-pen-nib"></i> LUMEN</h1>
+            <p class="tagline">Текст, который рисуется как ручкой</p>
         </header>
 
         <main class="main-content">
-            <!-- Область предпросмотра текста (здесь будет анимация) -->
+            <!-- ОСНОВНОЙ КОНТЕЙНЕР ДЛЯ SVG (здесь будет рисоваться текст) -->
             <section class="preview-section">
-                <div class="preview-container" id="textPreview">
-                    <!-- Сюда будет вставляться анимированный текст -->
-                    <p id="displayText">Введите текст для анимации</p>
+                <div class="preview-container">
+                    <svg id="textSvg" width="100%" height="100%" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet">
+                        <!-- Сюда JavaScript вставит пути букв -->
+                    </svg>
+                    <p id="fallbackText" class="fallback-text">Загружаю шрифт...</p>
                 </div>
             </section>
 
-            <!-- Панель управления анимацией и стилями -->
             <section class="control-panel">
-                <!-- Поле для ввода текста -->
                 <div class="input-group">
-                    <label for="textInput"><i class="fas fa-font"></i> Ваш текст (кириллица):</label>
-                    <textarea id="textInput" placeholder="Напишите здесь текст, который будет 'написан' на экране..."></textarea>
+                    <label for="textInput"><i class="fas fa-font"></i> Текст для рисования:</label>
+                    <textarea id="textInput" placeholder="Введите текст на русском (например, Привет)">Lumen</textarea>
                 </div>
 
-                <!-- Настройки внешнего вида текста -->
                 <div class="controls-grid">
                     <div class="control-group">
                         <label for="fontSelect"><i class="fas fa-paint-brush"></i> Шрифт:</label>
                         <select id="fontSelect">
-                            <!-- Рукописный шрифт будет первым и выбран по умолчанию -->
+                            <!-- Опции добавятся через JS -->
                         </select>
                     </div>
 
                     <div class="control-group">
-                        <label for="colorPicker"><i class="fas fa-palette"></i> Цвет текста:</label>
+                        <label for="colorPicker"><i class="fas fa-palette"></i> Цвет чернил:</label>
                         <input type="color" id="colorPicker" value="#4a6cf7">
                     </div>
 
                     <div class="control-group">
-                        <label for="sizeSlider"><i class="fas fa-text-height"></i> Размер: <span id="sizeValue">48</span>px</label>
-                        <input type="range" id="sizeSlider" min="24" max="120" value="48">
+                        <label for="widthSlider"><i class="fas fa-sliders-h"></i> Толщина линии: <span id="widthValue">3</span>px</label>
+                        <input type="range" id="widthSlider" min="1" max="10" value="3">
                     </div>
                 </div>
 
-                <!-- ПАНЕЛЬ УПРАВЛЕНИЯ АНИМАЦИЕЙ (СТОП, НАЗАД, ПЛЭЙ, ВПЕРЁД, СКОРОСТЬ) -->
+                <!-- ПАНЕЛЬ УПРАВЛЕНИЯ АНИМАЦИЕЙ -->
                 <div class="animation-controls">
-                    <!-- Кнопки управления воспроизведением -->
                     <div class="playback-controls">
-                        <button id="btnRewind" title="В начало (к первой букве)">
+                        <button id="btnRewind" title="В начало">
                             <i class="fas fa-fast-backward"></i>
                         </button>
-                        <button id="btnBack" title="Шаг назад (на одну букву)">
+                        <button id="btnBack" title="На шаг назад">
                             <i class="fas fa-backward"></i>
                         </button>
-                        <button id="btnPlayPause" title="Воспроизвести анимацию">
+                        <button id="btnPlayPause" title="Начать рисование">
                             <i class="fas fa-play"></i>
                         </button>
-                        <button id="btnForward" title="Шаг вперёд (на одну букву)">
+                        <button id="btnForward" title="На шаг вперёд">
                             <i class="fas fa-forward"></i>
                         </button>
-                        <button id="btnStop" title="Стоп и сбросить в начало">
+                        <button id="btnStop" title="Остановить и очистить">
                             <i class="fas fa-stop"></i>
                         </button>
                     </div>
-                    
-                    <!-- Ползунок скорости анимации -->
+
                     <div class="speed-control">
-                        <label for="speedSlider"><i class="fas fa-tachometer-alt"></i> Скорость письма:</label>
-                        <input type="range" id="speedSlider" min="1" max="10" value="5">
-                        <span id="speedValue">5</span>
+                        <label for="speedSlider"><i class="fas fa-tachometer-alt"></i> Скорость рисования:</label>
+                        <input type="range" id="speedSlider" min="50" max="500" value="200" step="10">
+                        <span id="speedValue">200</span> мс/буква
                     </div>
                 </div>
 
-                <!-- Кнопки для будущего функционала (сейчас неактивны) -->
                 <div class="action-buttons">
-                    <button id="downloadBtn" class="btn-success">
-                        <i class="fas fa-download"></i> Скачать анимацию
+                    <button id="downloadBtn" class="btn-success" disabled>
+                        <i class="fas fa-download"></i> Скачать анимацию (скоро)
                     </button>
                 </div>
             </section>
         </main>
 
-        <!-- Подвал -->
         <footer class="app-footer">
-            <p>Создано с <i class="fas fa-heart"></i> для творческих видео</p>
+            <p>Использует <a href="https://fonts.google.com/specimen/Caveat" target="_blank">Caveat</a> и <a href="https://animejs.com/" target="_blank">anime.js</a></p>
         </footer>
     </div>
 
-    <!-- Подключаем наш основной скрипт -->
+    <!-- Основной скрипт -->
     <script src="script.js"></script>
 </body>
 </html>
