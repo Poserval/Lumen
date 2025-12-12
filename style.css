@@ -49,13 +49,12 @@ body {
     font-weight: 300;
 }
 
-/* ===== ОБЛАСТЬ ПРЕДПРОСМОТРА ===== */
+/* ===== ОКНО ПРЕДПРОСМОТРА ===== */
 .preview-section {
     background: rgba(10, 10, 20, 0.7);
     border-radius: 24px;
     padding: 30px;
-    margin-top: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px; /* Уменьшил (было 20px) */
     border: 2px solid rgba(100, 150, 255, 0.2);
     min-height: 380px;
     display: flex;
@@ -103,21 +102,22 @@ body {
     padding: 20px;
 }
 
-/* ===== ОСНОВНАЯ ПАНЕЛЬ УПРАВЛЕНИЯ ===== */
+/* ===== ПАНЕЛЬ УПРАВЛЕНИЯ (ВСЁ, ЧТО НИЖЕ ОКНА) ===== */
 .control-panel {
     background: rgba(15, 15, 30, 0.8);
     border-radius: 24px;
-    padding: 30px;
+    padding: 25px; /* Уменьшил (было 30px) */
     border: 1px solid rgba(100, 150, 255, 0.2);
+    margin-top: 5px; /* Добавил минимальный отступ от окна */
 }
 
 .input-group {
-    margin-bottom: 25px;
+    margin-bottom: 20px; /* Уменьшил (было 25px) */
 }
 
 .input-group label {
     display: block;
-    margin-bottom: 12px;
+    margin-bottom: 10px; /* Уменьшил */
     font-size: 1.1rem;
     color: #ddd;
     font-weight: 500;
@@ -147,8 +147,8 @@ body {
 .controls-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 25px;
-    margin-bottom: 30px;
+    gap: 20px; /* Уменьшил (было 25px) */
+    margin-bottom: 25px; /* Уменьшил (было 30px) */
 }
 
 .control-group {
@@ -157,7 +157,7 @@ body {
 }
 
 .control-group label {
-    margin-bottom: 10px;
+    margin-bottom: 8px; /* Уменьшил */
     color: #ccc;
     font-size: 1rem;
     display: flex;
@@ -166,7 +166,7 @@ body {
 }
 
 select, input[type="color"], input[type="range"] {
-    padding: 14px 16px;
+    padding: 12px 14px; /* Уменьшил */
     border-radius: 12px;
     border: 2px solid rgba(255, 255, 255, 0.2);
     background: rgba(0, 0, 0, 0.6);
@@ -180,9 +180,9 @@ select {
 }
 
 input[type="color"] {
-    height: 55px;
+    height: 50px; /* Уменьшил */
     cursor: pointer;
-    padding: 8px;
+    padding: 6px; /* Уменьшил */
 }
 
 input[type="range"] {
@@ -204,13 +204,13 @@ input[type="range"]::-webkit-slider-thumb {
     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
 }
 
-/* ===== ПАНЕЛЬ УПРАВЛЕНИЯ АНИМАЦИЕЙ (КНОПКИ В РЯД) ===== */
+/* ===== ПРОИГРЫВАТЕЛЬ (ГЛАВНОЕ - ПОДНИМАЕМ ЕГО) ===== */
 .animation-controls {
     background: rgba(10, 10, 25, 0.9);
     border-radius: 18px;
-    padding: 20px;
-    margin-top: 5px;
-    margin-bottom: 25px;
+    padding: 15px; /* Уменьшил (было 20px) */
+    margin-top: 0; /* Убрал верхний отступ - теперь он будет сразу после настроек */
+    margin-bottom: 15px; /* Уменьшил (было 25px) */
     border: 1px solid rgba(100, 150, 255, 0.3);
     display: flex;
     flex-direction: column;
@@ -221,22 +221,22 @@ input[type="range"]::-webkit-slider-thumb {
 .playback-row {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 12px; /* Уменьшил (было 15px) */
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* Уменьшил (было 20px) */
     flex-wrap: nowrap;
 }
 
-/* Стиль прямоугольных кнопок */
+/* Кнопки проигрывателя - делаем меньше */
 .control-btn {
     flex: 1;
-    min-width: 65px;
-    height: 30px;
-    border-radius: 10px;
+    min-width: 60px; /* Уменьшил */
+    height: 45px; /* Уменьшил почти вполовиру (было 60px) */
+    border-radius: 8px; /* Уменьшил */
     background: linear-gradient(145deg, rgba(74, 108, 247, 0.9), rgba(58, 90, 220, 0.9));
     border: 2px solid rgba(255, 255, 255, 0.25);
     color: white;
-    font-size: 1.4rem;
+    font-size: 1.6rem; /* Уменьшил (было 1.8rem) */
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -255,46 +255,47 @@ input[type="range"]::-webkit-slider-thumb {
     transform: translateY(0);
 }
 
-/* Ползунок скорости */
+/* Ползунок скорости - тоже поджимаем */
 .speed-control {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: 12px; /* Уменьшил */
     color: #ddd;
-    font-size: 1rem;
+    font-size: 0.95rem; /* Уменьшил */
     width: 100%;
     flex-wrap: wrap;
 }
 
 #speedSlider {
     flex-grow: 1;
-    max-width: 320px;
+    max-width: 300px; /* Уменьшил */
 }
 
 #speedValue {
     font-weight: bold;
     color: #4a6cf7;
-    min-width: 40px;
+    min-width: 35px; /* Уменьшил */
 }
 
 /* ===== КНОПКА СКАЧИВАНИЯ ===== */
 .action-buttons {
     display: flex;
     justify-content: center;
+    margin-top: 10px; /* Уменьшил отступ сверху */
 }
 
 .btn-success {
-    padding: 18px 40px;
-    border-radius: 14px;
+    padding: 15px 30px; /* Уменьшил */
+    border-radius: 12px; /* Уменьшил */
     border: none;
-    font-size: 1.2rem;
+    font-size: 1.1rem; /* Уменьшил */
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     background: linear-gradient(90deg, #27ae60, #2ecc71);
     color: white;
 }
@@ -313,11 +314,11 @@ input[type="range"]::-webkit-slider-thumb {
 /* ===== ПОДВАЛ ===== */
 .app-footer {
     text-align: center;
-    margin-top: 40px;
-    padding-top: 20px;
+    margin-top: 25px; /* Уменьшил (было 40px) */
+    padding-top: 15px; /* Уменьшил */
     border-top: 1px solid rgba(255, 255, 255, 0.15);
     color: #888;
-    font-size: 1rem;
+    font-size: 0.9rem; /* Уменьшил */
 }
 
 .app-footer a {
@@ -334,53 +335,69 @@ input[type="range"]::-webkit-slider-thumb {
 /* ===== АДАПТИВНОСТЬ ===== */
 @media (max-width: 900px) {
     .app-container {
-        padding: 20px;
+        padding: 18px;
     }
     .app-header h1 {
         font-size: 3.5rem;
     }
     .preview-section {
-        min-height: 340px;
-        padding: 25px;
+        min-height: 320px;
+        padding: 20px;
+        margin-bottom: 8px;
     }
     #textSvg {
         height: 250px;
     }
     .control-panel {
-        padding: 25px;
+        padding: 20px;
     }
     .controls-grid {
         grid-template-columns: 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
     }
 }
 
 @media (max-width: 600px) {
     body {
-        padding: 15px;
+        padding: 10px;
     }
     .app-header h1 {
         font-size: 2.8rem;
     }
+    .tagline {
+        font-size: 1rem;
+    }
     .preview-section {
-        min-height: 300px;
-        padding: 20px;
+        min-height: 280px;
+        padding: 15px;
+        margin-bottom: 5px;
     }
     #textSvg {
-        height: 220px;
+        height: 200px;
     }
     .playback-row {
-        gap: 10px;
+        gap: 8px;
     }
     .control-btn {
-        min-width: 55px;
-        height: 55px;
-        font-size: 1.6rem;
+        min-width: 50px;
+        height: 40px;
+        font-size: 1.4rem;
     }
     .speed-control {
         flex-direction: column;
-        gap: 12px;
+        gap: 8px;
+        font-size: 0.9rem;
     }
     #speedSlider {
         max-width: 100%;
     }
-}
+    .btn-success {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+    .app-footer {
+        margin-top: 15px;
+        font-size: 0.8rem;
+    }
+        }
