@@ -23,66 +23,102 @@ document.addEventListener('DOMContentLoaded', async function() {
     // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
     let fonts = {};
     let currentFont = null;
-    let textPaths = []; // Массив SVG-путей для текущего текста
+    let textPaths = [];
     let currentAnimation = null;
     let isPlaying = false;
     let currentPathIndex = 0;
     let animationSpeed = parseInt(speedSlider.value);
+    let currentFontName = '';
 
-    // ========== ЗАГРУЗКА ШРИФТОВ ==========
+    // ========== ЗАГРУЗКА ШРИФТОВ (ТВОИ ФАЙЛЫ) ==========
     async function loadFonts() {
-        try {
-            console.log('Загрузка шрифтов...');
-            
-            // Основной рукописный шрифт (убедись, что файл fonts/Caveat-Regular.ttf существует в репозитории)
-            fonts['Caveat'] = await opentype.load('fonts/Caveat-Regular.ttf');
-            
-            // Добавляем системные шрифты как запасные
-            fonts['Arial'] = null; // Браузер сам подгрузит
-            fonts['Georgia'] = null;
-            
-            // Заполняем выпадающий список
-            fontSelect.innerHTML = '';
-            for (const fontName in fonts) {
+        console.log('Загрузка шрифтов...');
+        fonts = {};
+
+        // ВСЕ ТВОИ ШРИФТЫ
+        const fontFiles = [
+            { name: 'AlayaRoza', path: 'fonts/AlayaRozaDemo.otf' },
+            { name: 'Antarctic', path: 'fonts/Antarctic.otf' },
+            { name: 'Caveat-Bold', path: 'fonts/Caveat-Bolt.ttf' },
+            { name: 'RozoviiChulok', path: 'fonts/rozoviichulok_regular.ttf' },
+            { name: 'Caveat', path: 'fonts/Caveat-Regular.ttf' }
+        ];
+
+        // Пробуем загрузить каждый
+        const loadPromises = fontFiles.map(async (font) => {
+            try {
+                fonts[font.name] = await opentype.load(font.path);
+                console.log(`✓ Шрифт "${font.name}" загружен`);
+                return { name: font.name, success: true };
+            } catch (error) {
+                console.warn(`✗ Не удалось загрузить "${font.name}":`, error.message);
+                fonts[font.name] = null;
+                return { name: font.name, success: false };
+            }
+        });
+
+        await Promise.allSettled(loadPromises);
+        
+        // Заполняем выпадающий список ТОЛЬКО загруженными шрифтами
+        fontSelect.innerHTML = '';
+        for (const fontName in fonts) {
+            if (fonts[fontName] !== null) {
                 const option = document.createElement('option');
                 option.value = fontName;
-                option.textContent = fontName + (fonts[fontName] ? ' (рукописный)' : ' (системный)');
+                
+                // Красивые названия для списка
+                let displayName = fontName;
+                if (fontName === 'AlayaRoza') displayName = 'AlayaRoza (каллиграфия)';
+                if (fontName === 'Antarctic') displayName = 'Antarctic (печатный)';
+                if (fontName === 'Caveat-Bold') displayName = 'Caveat Bold (жирный)';
+                if (fontName === 'RozoviiChulok') displayName = 'Rozovii Chulok (детский)';
+                if (fontName === 'Caveat') displayName = 'Caveat (стандартный)';
+                
+                option.textContent = displayName;
                 fontSelect.appendChild(option);
             }
-            
-            currentFont = fonts['Caveat'];
-            fallbackText.textContent = 'Введите текст выше и нажмите "Начать рисование"';
-            console.log('Шрифты загружены');
-            
-        } catch (error) {
-            console.error('Ошибка загрузки шрифтов:', error);
-            fallbackText.textContent = 'Ошибка загрузки шрифта. Использую системный.';
-            currentFont = null;
         }
+        
+        // Выбираем первый загруженный шрифт по умолчанию
+        const firstLoaded = Object.keys(fonts).find(name => fonts[name] !== null);
+        if (firstLoaded) {
+            fontSelect.value = firstLoaded;
+            currentFont = fonts[firstLoaded];
+            currentFontName = firstLoaded;
+        }
+        
+        fallbackText.textContent = 'Шрифты загружены. Введите текст.';
+        console.log('Загрузка шрифтов завершена.');
     }
 
-    // ========== ПРЕОБРАЗОВАНИЕ ТЕКСТА В SVG-ПУТИ ==========
-    function textToPaths(text, fontSize = 120) {
-        // Очищаем SVG
+    // ========== ПРЕОБРАЗОВАНИЕ ТЕКСТА В ПУТИ ==========
+    function textToPaths(text, fontSize = 100) {
         svgContainer.innerHTML = '';
         textPaths = [];
+        currentPathIndex = 0;
         
         if (!text.trim()) {
             fallbackText.textContent = 'Введите текст для рисования';
+            fallbackText.style.display = 'block';
+            return;
+        }
+        
+        if (!currentFont) {
+            fallbackText.textContent = 'Шрифт не загружен. Выберите другой.';
+            fallbackText.style.display = 'block';
             return;
         }
         
         fallbackText.style.display = 'none';
         
         try {
-            let x = 50;
-            const y = 150;
-            const letterSpacing = 5;
+            let x = 80;
+            const y = 180;
+            const letterSpacing = 15;
             
             for (let i = 0; i < text.length; i++) {
                 const char = text[i];
                 
-                // Для рукописного шрифта: получаем путь из файла .ttf
                 if (currentFont && currentFont.charToGlyph) {
                     const glyph = currentFont.charToGlyph(char);
                     const path = glyph.getPath(x, y, fontSize);
@@ -98,7 +134,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                     pathElement.setAttribute('data-index', i);
                     pathElement.setAttribute('data-char', char);
                     
-                    // Изначально скрываем путь (длина тире = длина всего пути)
                     const length = pathElement.getTotalLength();
                     pathElement.style.strokeDasharray = length;
                     pathElement.style.strokeDashoffset = length;
@@ -111,28 +146,15 @@ document.addEventListener('DOMContentLoaded', async function() {
                     });
                     
                     x += glyph.advanceWidth * (fontSize / currentFont.unitsPerEm) + letterSpacing;
-                    
-                } else {
-                    // Запасной вариант: создаём текстовый элемент (без анимации рисования)
-                    const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    textElement.setAttribute('x', x);
-                    textElement.setAttribute('y', y);
-                    textElement.setAttribute('font-size', fontSize);
-                    textElement.setAttribute('fill', colorPicker.value);
-                    textElement.textContent = char;
-                    
-                    svgContainer.appendChild(textElement);
-                    x += 40;
                 }
             }
             
-            // Подгоняем viewBox под ширину текста
-            svgContainer.setAttribute('viewBox', `0 0 ${x + 100} 250`);
+            svgContainer.setAttribute('viewBox', `0 0 ${x + 100} 300`);
             
         } catch (error) {
             console.error('Ошибка создания путей:', error);
             fallbackText.style.display = 'block';
-            fallbackText.textContent = 'Не удалось создать контуры. Используйте латиницу.';
+            fallbackText.textContent = 'Ошибка создания контуров. Попробуйте другой шрифт.';
         }
     }
 
@@ -147,7 +169,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         const path = textPaths[currentPathIndex];
         
-        // Анимация одного пути с помощью anime.js
         currentAnimation = anime({
             targets: path.element,
             strokeDashoffset: [anime.setDashoffset, 0],
@@ -160,19 +181,16 @@ document.addEventListener('DOMContentLoaded', async function() {
             complete: function() {
                 currentPathIndex++;
                 if (isPlaying) {
-                    setTimeout(drawNextPath, 50); // Небольшая пауза между буквами
+                    setTimeout(drawNextPath, 50);
                 }
             }
         });
-        
-        updatePlayButton();
     }
 
     // ========== УПРАВЛЕНИЕ АНИМАЦИЕЙ ==========
     function startAnimation() {
         if (textPaths.length === 0) {
-            const text = textInput.value.trim() || 'Lumen';
-            textToPaths(text);
+            textToPaths(textInput.value.trim() || 'Привет');
         }
         
         if (currentPathIndex >= textPaths.length) {
@@ -214,12 +232,10 @@ document.addEventListener('DOMContentLoaded', async function() {
             currentPathIndex--;
             resetPaths();
             
-            // Прорисовываем все пути до текущего индекса
             for (let i = 0; i < currentPathIndex; i++) {
                 textPaths[i].element.style.strokeDashoffset = 0;
             }
             
-            // Сбрасываем текущий путь
             textPaths[currentPathIndex].element.style.strokeDashoffset = 
                 textPaths[currentPathIndex].length;
                 
@@ -229,12 +245,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     function stepForward() {
         if (currentPathIndex < textPaths.length) {
-            // Завершаем текущую букву
             textPaths[currentPathIndex].element.style.strokeDashoffset = 0;
             currentPathIndex++;
             
             if (currentPathIndex < textPaths.length) {
-                // Начинаем следующую букву
                 textPaths[currentPathIndex].element.style.strokeDashoffset = 
                     textPaths[currentPathIndex].length;
             }
@@ -252,14 +266,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
-    function updatePlayButton() {
-        if (currentPathIndex >= textPaths.length) {
-            btnPlayPause.innerHTML = '<i class="fas fa-redo"></i>';
-            btnPlayPause.title = 'Начать заново';
-        }
-    }
-
-    // ========== ОБНОВЛЕНИЕ СКОРОСТИ ==========
     function updateSpeed() {
         animationSpeed = parseInt(speedSlider.value);
         speedValue.textContent = animationSpeed;
@@ -271,22 +277,19 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // ========== НАСТРОЙКА СОБЫТИЙ ==========
     function setupEventListeners() {
-        // При изменении текста пересоздаём пути
         textInput.addEventListener('input', function() {
             if (isPlaying) pauseAnimation();
             textToPaths(this.value.trim());
-            currentPathIndex = 0;
         });
 
-        // Смена шрифта
         fontSelect.addEventListener('change', function() {
             currentFont = fonts[this.value];
+            currentFontName = this.value;
             if (isPlaying) pauseAnimation();
             textToPaths(textInput.value.trim());
             currentPathIndex = 0;
         });
 
-        // Смена цвета и толщины
         colorPicker.addEventListener('input', function() {
             textPaths.forEach(path => {
                 path.element.style.stroke = this.value;
@@ -300,7 +303,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             });
         });
 
-        // Управление анимацией
         btnPlayPause.addEventListener('click', function() {
             if (currentPathIndex >= textPaths.length && textPaths.length > 0) {
                 rewindAnimation();
@@ -315,10 +317,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         btnBack.addEventListener('click', stepBack);
         btnForward.addEventListener('click', stepForward);
         speedSlider.addEventListener('input', updateSpeed);
-
-        // Кнопка скачивания
         downloadBtn.addEventListener('click', function() {
-            alert('Функция экспорта анимации в видео будет добавлена позже.');
+            alert('Экспорт в видео будет добавлен в следующем обновлении.');
         });
     }
 
@@ -326,9 +326,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     await loadFonts();
     setupEventListeners();
     updateSpeed();
-    
-    // Создаём начальный текст
     textToPaths(textInput.value.trim());
     
-    console.log('Lumen: Система рисования готова!');
+    console.log('Lumen: Система готова с новыми шрифтами!');
 });
