@@ -15,11 +15,11 @@
     <div class="app-container">
         <header class="app-header">
             <h1><i class="fas fa-pen-nib"></i> LUMEN</h1>
-            <p class="tagline">Пишем текст, как ручкой</p>
+            <p class="tagline">ПИШЕМ ТЕКСТ КАК РУЧКОЙ</p>
         </header>
 
         <main class="main-content">
-            <!-- ОСНОВНОЙ КОНТЕЙНЕР ДЛЯ SVG (здесь будет рисоваться текст) -->
+            <!-- Область предпросмотра текста -->
             <section class="preview-section">
                 <div class="preview-container">
                     <svg id="textSvg" width="100%" height="100%" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet">
@@ -29,6 +29,7 @@
                 </div>
             </section>
 
+            <!-- ПАНЕЛЬ УПРАВЛЕНИЯ: КНОПКИ В ОДИН РЯД -->
             <section class="control-panel">
                 <div class="input-group">
                     <label for="textInput"><i class="fas fa-font"></i> Текст для рисования:</label>
@@ -54,33 +55,32 @@
                     </div>
                 </div>
 
-                <!-- ПАНЕЛЬ УПРАВЛЕНИЯ АНИМАЦИЕЙ -->
+                <!-- ОСНОВНЫЕ КНОПКИ УПРАВЛЕНИЯ АНИМАЦИЕЙ -->
                 <div class="animation-controls">
-                    <div class="playback-controls">
-                        <button id="btnRewind" title="В начало">
-                            <i class="fas fa-fast-backward"></i>
+                    <div class="playback-row">
+                        <button id="btnBack" class="control-btn" title="Назад">
+                            <i class="fas fa-step-backward"></i>
                         </button>
-                        <button id="btnBack" title="На шаг назад">
-                            <i class="fas fa-backward"></i>
-                        </button>
-                        <button id="btnPlayPause" title="Начать рисование">
+                        <button id="btnPlayPause" class="control-btn" title="Воспроизвести/Пауза">
                             <i class="fas fa-play"></i>
                         </button>
-                        <button id="btnForward" title="На шаг вперёд">
-                            <i class="fas fa-forward"></i>
+                        <button id="btnForward" class="control-btn" title="Вперёд">
+                            <i class="fas fa-step-forward"></i>
                         </button>
-                        <button id="btnStop" title="Остановить и очистить">
+                        <button id="btnStop" class="control-btn" title="Стоп">
                             <i class="fas fa-stop"></i>
                         </button>
                     </div>
-
+                    
+                    <!-- Ползунок скорости -->
                     <div class="speed-control">
-                        <label for="speedSlider"><i class="fas fa-tachometer-alt"></i> Скорость рисования:</label>
+                        <label for="speedSlider"><i class="fas fa-tachometer-alt"></i> Скорость письма:</label>
                         <input type="range" id="speedSlider" min="50" max="500" value="200" step="10">
                         <span id="speedValue">200</span> мс/буква
                     </div>
                 </div>
 
+                <!-- Кнопка скачивания -->
                 <div class="action-buttons">
                     <button id="downloadBtn" class="btn-success" disabled>
                         <i class="fas fa-download"></i> Скачать анимацию (скоро)
