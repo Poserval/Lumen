@@ -230,13 +230,13 @@ input[type="range"]::-webkit-slider-thumb {
 /* Кнопки проигрывателя - делаем меньше */
 .control-btn {
     flex: 1;
-    min-width: 60px; /* Уменьшил */
-    height: 45px; /* Уменьшил почти вполовиру (было 60px) */
-    border-radius: 8px; /* Уменьшил */
+    min-width: 50px; /* Уменьшил */
+    height: 22px; /* Уменьшил почти вполовиру (было 60px) */
+    border-radius: 6px; /* Уменьшил */
     background: linear-gradient(145deg, rgba(74, 108, 247, 0.9), rgba(58, 90, 220, 0.9));
     border: 2px solid rgba(255, 255, 255, 0.25);
     color: white;
-    font-size: 1.6rem; /* Уменьшил (было 1.8rem) */
+    font-size: 1.2rem; /* Уменьшил (было 1.8rem) */
     cursor: pointer;
     display: flex;
     align-items: center;
