@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lumen - Рисование текста</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Подключаем анимационную библиотеку -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <!-- Подключаем библиотеку для работы со шрифтами -->
     <script src="https://cdn.jsdelivr.net/npm/opentype.js@latest/dist/opentype.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -19,43 +17,15 @@
         </header>
 
         <main class="main-content">
-            <!-- Область предпросмотра текста -->
             <section class="preview-section">
                 <div class="preview-container">
-                    <svg id="textSvg" width="100%" height="100%" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet">
-                        <!-- Сюда JavaScript вставит пути букв -->
-                    </svg>
+                    <svg id="textSvg" width="100%" height="100%" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet"></svg>
                     <p id="fallbackText" class="fallback-text">Загружаю шрифт...</p>
                 </div>
             </section>
 
-            <!-- ПАНЕЛЬ УПРАВЛЕНИЯ: КНОПКИ В ОДИН РЯД -->
             <section class="control-panel">
-                <div class="input-group">
-                    <label for="textInput"><i class="fas fa-font"></i> Текст для рисования:</label>
-                    <textarea id="textInput" placeholder="Введите текст на русском (например, Привет)">Lumen</textarea>
-                </div>
-
-                <div class="controls-grid">
-                    <div class="control-group">
-                        <label for="fontSelect"><i class="fas fa-paint-brush"></i> Шрифт:</label>
-                        <select id="fontSelect">
-                            <!-- Опции добавятся через JS -->
-                        </select>
-                    </div>
-
-                    <div class="control-group">
-                        <label for="colorPicker"><i class="fas fa-palette"></i> Цвет чернил:</label>
-                        <input type="color" id="colorPicker" value="#4a6cf7">
-                    </div>
-
-                    <div class="control-group">
-                        <label for="widthSlider"><i class="fas fa-sliders-h"></i> Толщина линии: <span id="widthValue">3</span>px</label>
-                        <input type="range" id="widthSlider" min="1" max="10" value="3">
-                    </div>
-                </div>
-
-                <!-- ОСНОВНЫЕ КНОПКИ УПРАВЛЕНИЯ АНИМАЦИЕЙ -->
+                <!-- 1. ПРОИГРЫВАТЕЛЬ - ТЕПЕРЬ ПЕРВЫЙ -->
                 <div class="animation-controls">
                     <div class="playback-row">
                         <button id="btnBack" class="control-btn" title="Назад">
@@ -72,15 +42,36 @@
                         </button>
                     </div>
                     
-                    <!-- Ползунок скорости -->
                     <div class="speed-control">
-                        <label for="speedSlider"><i class="fas fa-tachometer-alt"></i> Скорость письма:</label>
+                        <label for="speedSlider"><i class="fas fa-tachometer-alt"></i> Скорость:</label>
                         <input type="range" id="speedSlider" min="50" max="500" value="200" step="10">
                         <span id="speedValue">200</span> мс/буква
                     </div>
                 </div>
 
-                <!-- Кнопка скачивания -->
+                <!-- 2. ПОЛЕ ДЛЯ ВВОДА ТЕКСТА -->
+                <div class="input-group">
+                    <label for="textInput"><i class="fas fa-font"></i> Текст для рисования:</label>
+                    <textarea id="textInput" placeholder="Введите текст (например, Привет)">Lumen</textarea>
+                </div>
+
+                <!-- 3. НАСТРОЙКИ ШРИФТА, ЦВЕТА, ТОЛЩИНЫ -->
+                <div class="controls-grid">
+                    <div class="control-group">
+                        <label for="fontSelect"><i class="fas fa-paint-brush"></i> Шрифт:</label>
+                        <select id="fontSelect"></select>
+                    </div>
+                    <div class="control-group">
+                        <label for="colorPicker"><i class="fas fa-palette"></i> Цвет чернил:</label>
+                        <input type="color" id="colorPicker" value="#4a6cf7">
+                    </div>
+                    <div class="control-group">
+                        <label for="widthSlider"><i class="fas fa-sliders-h"></i> Толщина: <span id="widthValue">3</span>px</label>
+                        <input type="range" id="widthSlider" min="1" max="10" value="3">
+                    </div>
+                </div>
+
+                <!-- 4. КНОПКА СКАЧИВАНИЯ -->
                 <div class="action-buttons">
                     <button id="downloadBtn" class="btn-success" disabled>
                         <i class="fas fa-download"></i> Скачать анимацию (скоро)
@@ -94,7 +85,6 @@
         </footer>
     </div>
 
-    <!-- Основной скрипт -->
     <script src="script.js"></script>
 </body>
 </html>
