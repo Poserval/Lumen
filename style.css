@@ -1,4 +1,8 @@
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -15,15 +19,16 @@ body {
     background: rgba(20, 20, 35, 0.85);
     backdrop-filter: blur(15px);
     border-radius: 28px;
-    padding: 35px;
+    padding: 25px 35px 35px;
     box-shadow: 0 25px 75px rgba(0, 0, 0, 0.8);
     border: 1px solid rgba(100, 100, 255, 0.15);
 }
 
+/* ===== ШАПКА ===== */
 .app-header {
     text-align: center;
     margin-bottom: 15px;
-    padding-bottom: 25px;
+    padding-bottom: 15px;
     border-bottom: 2px solid rgba(100, 150, 255, 0.3);
 }
 
@@ -39,19 +44,20 @@ body {
 }
 
 .tagline {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
     color: #aaa;
     font-weight: 300;
 }
 
-/* ========== ОБЛАСТЬ ПРЕДПРОСМОТРА (SVG) ========== */
+/* ===== ОБЛАСТЬ ПРЕДПРОСМОТРА ===== */
 .preview-section {
     background: rgba(10, 10, 20, 0.7);
     border-radius: 24px;
-    padding: 40px 30px;
-    margin-bottom: 45px;
+    padding: 30px;
+    margin-top: 10px;
+    margin-bottom: 20px;
     border: 2px solid rgba(100, 150, 255, 0.2);
-    min-height: 400px;
+    min-height: 380px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -97,32 +103,35 @@ body {
     padding: 20px;
 }
 
-/* ========== ПАНЕЛЬ УПРАВЛЕНИЯ ========== */
+/* ===== ОСНОВНАЯ ПАНЕЛЬ УПРАВЛЕНИЯ ===== */
 .control-panel {
     background: rgba(15, 15, 30, 0.8);
     border-radius: 24px;
-    padding: 40px;
+    padding: 30px;
     border: 1px solid rgba(100, 150, 255, 0.2);
 }
 
-.input-group { margin-bottom: 35px; }
+.input-group {
+    margin-bottom: 25px;
+}
+
 .input-group label {
     display: block;
-    margin-bottom: 15px;
-    font-size: 1.2rem;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
     color: #ddd;
     font-weight: 500;
 }
 
 #textInput {
     width: 100%;
-    min-height: 120px;
-    padding: 20px;
-    border-radius: 18px;
+    min-height: 110px;
+    padding: 18px;
+    border-radius: 16px;
     border: 2px solid rgba(100, 150, 255, 0.4);
     background: rgba(0, 0, 0, 0.5);
     color: #fff;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     resize: vertical;
     font-family: 'Caveat', cursive;
     line-height: 1.6;
@@ -137,9 +146,9 @@ body {
 
 .controls-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    margin-bottom: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
 }
 
 .control-group {
@@ -148,30 +157,37 @@ body {
 }
 
 .control-group label {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     color: #ccc;
-    font-size: 1.1rem;
+    font-size: 1rem;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 select, input[type="color"], input[type="range"] {
-    padding: 16px 20px;
-    border-radius: 14px;
+    padding: 14px 16px;
+    border-radius: 12px;
     border: 2px solid rgba(255, 255, 255, 0.2);
     background: rgba(0, 0, 0, 0.6);
     color: white;
-    font-size: 1.1rem;
+    font-size: 1rem;
     transition: all 0.3s;
 }
 
-select { cursor: pointer; }
-input[type="color"] { height: 60px; cursor: pointer; padding: 10px; }
+select {
+    cursor: pointer;
+}
+
+input[type="color"] {
+    height: 55px;
+    cursor: pointer;
+    padding: 8px;
+}
 
 input[type="range"] {
     padding: 0;
-    height: 10px;
+    height: 8px;
     -webkit-appearance: none;
     background: linear-gradient(90deg, #4a6cf7, #6a8cff);
     border-radius: 10px;
@@ -179,8 +195,8 @@ input[type="range"] {
 
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     background: white;
     border: 3px solid #4a6cf7;
@@ -188,82 +204,104 @@ input[type="range"]::-webkit-slider-thumb {
     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
 }
 
-/* ========== ПАНЕЛЬ АНИМАЦИИ ========== */
+/* ===== ПАНЕЛЬ УПРАВЛЕНИЯ АНИМАЦИЕЙ (КНОПКИ В РЯД) ===== */
 .animation-controls {
     background: rgba(10, 10, 25, 0.9);
-    border-radius: 20px;
-    padding: 30px;
-    margin-bottom: 35px;
+    border-radius: 18px;
+    padding: 20px;
+    margin-top: 15px;
+    margin-bottom: 25px;
     border: 1px solid rgba(100, 150, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.playback-controls {
+/* Ряд кнопок */
+.playback-row {
     display: flex;
     justify-content: center;
-    gap: 25px;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 20px;
+    flex-wrap: nowrap;
 }
 
-.playback-controls button {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
+/* Стиль прямоугольных кнопок */
+.control-btn {
+    flex: 1;
+    min-width: 65px;
+    height: 60px;
+    border-radius: 10px;
     background: linear-gradient(145deg, rgba(74, 108, 247, 0.9), rgba(58, 90, 220, 0.9));
-    border: 3px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.25);
     color: white;
     font-size: 1.8rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.25s ease;
+    transition: all 0.2s ease;
+    padding: 0;
 }
 
-.playback-controls button:hover {
-    transform: translateY(-8px) scale(1.1);
-    box-shadow: 0 15px 30px rgba(74, 108, 247, 0.5);
-    border-color: white;
+.control-btn:hover {
+    background: rgba(100, 130, 255, 0.95);
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
-.playback-controls button:active { transform: translateY(-4px) scale(1.05); }
+.control-btn:active {
+    transform: translateY(0);
+}
 
+/* Ползунок скорости */
 .speed-control {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 25px;
+    gap: 15px;
     color: #ddd;
-    font-size: 1.2rem;
+    font-size: 1rem;
+    width: 100%;
     flex-wrap: wrap;
 }
 
-#speedSlider { flex-grow: 1; max-width: 400px; }
-#speedValue { font-weight: bold; color: #4a6cf7; min-width: 50px; }
+#speedSlider {
+    flex-grow: 1;
+    max-width: 320px;
+}
 
-/* ========== КНОПКИ ========== */
-.action-buttons { display: flex; justify-content: center; }
-button:not(.playback-controls button) {
-    padding: 20px 45px;
-    border-radius: 16px;
+#speedValue {
+    font-weight: bold;
+    color: #4a6cf7;
+    min-width: 40px;
+}
+
+/* ===== КНОПКА СКАЧИВАНИЯ ===== */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-success {
+    padding: 18px 40px;
+    border-radius: 14px;
     border: none;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
     display: flex;
     align-items: center;
-    gap: 15px;
-}
-
-.btn-success {
+    gap: 12px;
     background: linear-gradient(90deg, #27ae60, #2ecc71);
     color: white;
 }
 
 .btn-success:hover:not(:disabled) {
-    transform: translateY(-6px);
-    box-shadow: 0 18px 35px rgba(46, 204, 113, 0.5);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(46, 204, 113, 0.4);
 }
 
 .btn-success:disabled {
@@ -272,11 +310,11 @@ button:not(.playback-controls button) {
     transform: none !important;
 }
 
-/* ========== ПОДВАЛ ========== */
+/* ===== ПОДВАЛ ===== */
 .app-footer {
     text-align: center;
-    margin-top: 50px;
-    padding-top: 25px;
+    margin-top: 40px;
+    padding-top: 20px;
     border-top: 1px solid rgba(255, 255, 255, 0.15);
     color: #888;
     font-size: 1rem;
@@ -288,64 +326,61 @@ button:not(.playback-controls button) {
     transition: color 0.3s;
 }
 
-.app-footer a:hover { color: #4a6cf7; text-decoration: underline; }
+.app-footer a:hover {
+    color: #4a6cf7;
+    text-decoration: underline;
+}
 
-/* ========== АДАПТИВНОСТЬ ========== */
+/* ===== АДАПТИВНОСТЬ ===== */
 @media (max-width: 900px) {
-    .app-container { padding: 25px; }
-    .app-header h1 { font-size: 3.5rem; }
-    .preview-section { min-height: 350px; padding: 30px 20px; }
-    #textSvg { height: 250px; }
-    .control-panel { padding: 30px; }
-    .controls-grid { grid-template-columns: 1fr; }
-    .playback-controls button { width: 65px; height: 65px; font-size: 1.6rem; }
-}
-
-@media (max-width: 600px) {
-    body { padding: 15px; }
-    .app-header h1 { font-size: 2.8rem; }
-    .tagline { font-size: 1.2rem; }
-    .preview-section { min-height: 300px; }
-    #textSvg { height: 200px; }
-    .playback-controls { gap: 15px; }
-    .playback-controls button { width: 60px; height: 60px; }
-    .speed-control { flex-direction: column; gap: 15px; }
-    #speedSlider { max-width: 100%; }
-}
-
-/* ===== АДАПТИВНОСТЬ ДЛЯ РАЗНЫХ ШРИФТОВ ===== */
-@media (max-width: 768px) {
+    .app-container {
+        padding: 20px;
+    }
+    .app-header h1 {
+        font-size: 3.5rem;
+    }
+    .preview-section {
+        min-height: 340px;
+        padding: 25px;
+    }
     #textSvg {
         height: 250px;
     }
-    
+    .control-panel {
+        padding: 25px;
+    }
+    .controls-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+    .app-header h1 {
+        font-size: 2.8rem;
+    }
     .preview-section {
-        min-height: 320px;
-        padding: 25px 15px;
+        min-height: 300px;
+        padding: 20px;
     }
-    
-    /* Для очень длинных текстов */
-    .preview-container {
-        overflow-x: auto;
-        overflow-y: hidden;
+    #textSvg {
+        height: 220px;
     }
-}
-
-/* Особые настройки для декоративных шрифтов */
-.preview-section.wide-font {
-    padding-left: 10px;
-    padding-right: 10px;
-}
-
-/* Индикатор загрузки шрифтов */
-.font-loading {
-    font-style: italic;
-    color: #888;
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0% { opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { opacity: 0.6; }
+    .playback-row {
+        gap: 10px;
+    }
+    .control-btn {
+        min-width: 55px;
+        height: 55px;
+        font-size: 1.6rem;
+    }
+    .speed-control {
+        flex-direction: column;
+        gap: 12px;
+    }
+    #speedSlider {
+        max-width: 100%;
+    }
 }
