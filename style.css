@@ -312,3 +312,40 @@ button:not(.playback-controls button) {
     .speed-control { flex-direction: column; gap: 15px; }
     #speedSlider { max-width: 100%; }
 }
+
+/* ===== АДАПТИВНОСТЬ ДЛЯ РАЗНЫХ ШРИФТОВ ===== */
+@media (max-width: 768px) {
+    #textSvg {
+        height: 250px;
+    }
+    
+    .preview-section {
+        min-height: 320px;
+        padding: 25px 15px;
+    }
+    
+    /* Для очень длинных текстов */
+    .preview-container {
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+}
+
+/* Особые настройки для декоративных шрифтов */
+.preview-section.wide-font {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+/* Индикатор загрузки шрифтов */
+.font-loading {
+    font-style: italic;
+    color: #888;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
