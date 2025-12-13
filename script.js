@@ -10,14 +10,20 @@ document.addEventListener('DOMContentLoaded', async function() {
     const svgContainer = document.getElementById('textSvg');
     const fallbackText = document.getElementById('fallbackText');
     
-    // Элементы управления
+    // Элементы управления проигрывателем
     const btnPlayPause = document.getElementById('btnPlayPause');
     const btnStop = document.getElementById('btnStop');
     const btnRewindSpeed = document.getElementById('btnRewindSpeed');
     const btnForwardSpeed = document.getElementById('btnForwardSpeed');
     const progressSlider = document.getElementById('progressSlider');
     const progressValue = document.getElementById('progressValue');
-    const downloadBtn = document.getElementById('downloadBtn');
+    
+    // Новые элементы интерфейса
+    const textButton = document.getElementById('textButton');
+    const textPanel = document.getElementById('textPanel');
+    const closeTextPanel = document.getElementById('closeTextPanel');
+    const applyText = document.getElementById('applyText');
+    const buttonBar = document.getElementById('buttonBar');
 
     // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
     let fonts = {};
@@ -164,14 +170,12 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // ========== УПРАВЛЕНИЕ СКОРОСТЬЮ ==========
     function updateSpeedDisplay() {
-        // Обновляем индикаторы на кнопках
         const forwardIndicator = btnForwardSpeed.querySelector('.speed-indicator');
         const rewindIndicator = btnRewindSpeed.querySelector('.speed-indicator');
         
         forwardIndicator.textContent = forwardSpeed + 'x';
         rewindIndicator.textContent = rewindSpeed + 'x';
         
-        // Обновляем классы для стилизации
         btnForwardSpeed.className = 'control-btn speed-btn';
         btnRewindSpeed.className = 'control-btn speed-btn';
         
@@ -181,36 +185,25 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (isReverse) {
             btnRewindSpeed.classList.add('active');
             btnRewindSpeed.classList.add('reverse');
-            // Для кнопки "назад" используем обратное значение (1/2, 1/4, 1/8)
             currentSpeed = 1 / rewindSpeed;
         } else {
             btnForwardSpeed.classList.add('active');
-            currentSpeed = forwardSpeed; // 1, 2, 4, 8
+            currentSpeed = forwardSpeed;
         }
-        
-        console.log(`Текущая скорость: ${currentSpeed}x, Направление: вперед`);
     }
 
     function changeSpeed(forward = true) {
         if (forward) {
-            // Сбрасываем скорость назад к 1x
             rewindSpeed = 1;
-            
-            // Меняем скорость вперед по циклу
             const speeds = [1, 2, 4, 8];
             const currentIndex = speeds.indexOf(forwardSpeed);
             forwardSpeed = speeds[(currentIndex + 1) % speeds.length];
-            
             isReverse = false;
         } else {
-            // Сбрасываем скорость вперед к 1x
             forwardSpeed = 1;
-            
-            // Меняем скорость назад по циклу (для замедления)
             const speeds = [1, 2, 4, 8];
             const currentIndex = speeds.indexOf(rewindSpeed);
             rewindSpeed = speeds[(currentIndex + 1) % speeds.length];
-            
             isReverse = true;
         }
         
@@ -265,7 +258,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         updateProgress(value);
     }
 
-    // ========== АНИМАЦИЯ (ВСЕГДА СЛЕВА НАПРАВО) ==========
+    // ========== АНИМАЦИЯ ==========
     function drawNextPath() {
         if (currentPathIndex >= textPaths.length || currentPathIndex < 0) {
             pauseAnimation();
@@ -276,20 +269,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         const path = textPaths[currentPathIndex];
         
-        // Вычисляем фактическую скорость анимации
         let actualSpeed;
         if (isReverse) {
-            // Для кнопки "назад" - замедление (большее время)
-            actualSpeed = baseSpeed * rewindSpeed; // 200 * 2 = 400ms, 200 * 4 = 800ms и т.д.
+            actualSpeed = baseSpeed * rewindSpeed;
         } else {
-            // Для кнопки "вперед" - ускорение (меньшее время)
-            actualSpeed = baseSpeed / forwardSpeed; // 200 / 2 = 100ms, 200 / 4 = 50ms и т.д.
+            actualSpeed = baseSpeed / forwardSpeed;
         }
         
-        // Ограничиваем минимальную и максимальную скорость
         actualSpeed = Math.max(50, Math.min(2000, actualSpeed));
-        
-        console.log(`Анимация буквы ${currentPathIndex}, скорость: ${actualSpeed}ms`);
         
         currentAnimation = anime({
             targets: path.element,
@@ -301,8 +288,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 path.element.style.strokeWidth = widthSlider.value + 'px';
             },
             complete: function() {
-                currentPathIndex++; // Всегда увеличиваем индекс - всегда слева направо
-                
+                currentPathIndex++;
                 updateProgress(calculateCurrentProgress());
                 
                 if (isPlaying) {
@@ -353,34 +339,28 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
+    // ========== УПРАВЛЕНИЕ ИНТЕРФЕЙСОМ ==========
+    function showTextPanel() {
+        textPanel.classList.remove('hidden');
+        buttonBar.classList.remove('hidden');
+        // Прокручиваем кнопку "Текст" в сетке
+        textButton.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function hideTextPanel() {
+        textPanel.classList.add('hidden');
+        buttonBar.classList.add('hidden');
+    }
+
+    function applyTextChanges() {
+        if (isPlaying) pauseAnimation();
+        textToPaths(textInput.value.trim());
+        hideTextPanel();
+    }
+
     // ========== НАСТРОЙКА СОБЫТИЙ ==========
     function setupEventListeners() {
-        textInput.addEventListener('input', function() {
-            if (isPlaying) pauseAnimation();
-            textToPaths(this.value.trim());
-        });
-
-        fontSelect.addEventListener('change', function() {
-            currentFont = fonts[this.value];
-            currentFontName = this.value;
-            if (isPlaying) pauseAnimation();
-            textToPaths(textInput.value.trim());
-            currentPathIndex = 0;
-        });
-
-        colorPicker.addEventListener('input', function() {
-            textPaths.forEach(path => {
-                path.element.style.stroke = this.value;
-            });
-        });
-
-        widthSlider.addEventListener('input', function() {
-            widthValue.textContent = this.value;
-            textPaths.forEach(path => {
-                path.element.style.strokeWidth = this.value + 'px';
-            });
-        });
-
+        // Управление проигрывателем
         btnPlayPause.addEventListener('click', function() {
             if (currentPathIndex >= textPaths.length && textPaths.length > 0) {
                 currentPathIndex = 0;
@@ -410,8 +390,52 @@ document.addEventListener('DOMContentLoaded', async function() {
             seekToProgress(parseInt(this.value));
         });
 
-        downloadBtn.addEventListener('click', function() {
-            alert('Экспорт в видео будет добавлен в следующем обновлении.');
+        // Управление текстом
+        textInput.addEventListener('input', function() {
+            // Обновляем текст в реальном времени
+            if (!isPlaying) {
+                textToPaths(this.value.trim());
+            }
+        });
+
+        fontSelect.addEventListener('change', function() {
+            currentFont = fonts[this.value];
+            currentFontName = this.value;
+            if (isPlaying) pauseAnimation();
+            textToPaths(textInput.value.trim());
+            currentPathIndex = 0;
+        });
+
+        colorPicker.addEventListener('input', function() {
+            textPaths.forEach(path => {
+                path.element.style.stroke = this.value;
+            });
+        });
+
+        widthSlider.addEventListener('input', function() {
+            widthValue.textContent = this.value;
+            textPaths.forEach(path => {
+                path.element.style.strokeWidth = this.value + 'px';
+            });
+        });
+
+        // Управление интерфейсом
+        textButton.addEventListener('click', showTextPanel);
+        closeTextPanel.addEventListener('click', hideTextPanel);
+        applyText.addEventListener('click', applyTextChanges);
+
+        // Закрытие панелей по клику вне их области
+        document.addEventListener('click', function(event) {
+            if (!textPanel.contains(event.target) && 
+                !textButton.contains(event.target) && 
+                !textPanel.classList.contains('hidden')) {
+                hideTextPanel();
+            }
+        });
+
+        // Предотвращаем закрытие при клике внутри панели
+        textPanel.addEventListener('click', function(event) {
+            event.stopPropagation();
         });
     }
 
@@ -421,5 +445,5 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateSpeedDisplay();
     textToPaths(textInput.value.trim());
     
-    console.log('Lumen: Система готова с исправленным проигрывателем!');
+    console.log('Lumen: Новый интерфейс загружен!');
 });
