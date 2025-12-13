@@ -28,12 +28,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     let isPlaying = false;
     let currentPathIndex = 0;
     let totalDuration = 0;
-    let animationStartTime = 0;
-    let animationPauseTime = 0;
     let currentSpeed = 1; // 1x, 2x, 4x, 8x
+    let forwardSpeed = 1; // скорость для кнопки вперед
+    let rewindSpeed = 1; // скорость для кнопки назад
     let baseSpeed = 200; // базовая скорость в мс/буква
     let isReverse = false; // направление анимации
-    let animationInterval = null;
     let currentFontName = '';
 
     // ========== ЗАГРУЗКА ШРИФТОВ ==========
@@ -166,43 +165,64 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // ========== УПРАВЛЕНИЕ СКОРОСТЬЮ ==========
     function updateSpeedDisplay() {
-        const speedText = Math.abs(currentSpeed) + 'x';
-        const direction = currentSpeed > 0 ? 'вперёд' : 'назад';
-        currentSpeedLabel.innerHTML = `Скорость: <strong>${speedText} ${direction}</strong>`;
-        
         // Обновляем индикаторы на кнопках
-        const speedIndicators = document.querySelectorAll('.speed-indicator');
-        speedIndicators.forEach(indicator => {
-            indicator.textContent = Math.abs(currentSpeed) + 'x';
-        });
+        const forwardIndicator = btnForwardSpeed.querySelector('.speed-indicator');
+        const rewindIndicator = btnRewindSpeed.querySelector('.speed-indicator');
+        
+        forwardIndicator.textContent = forwardSpeed + 'x';
+        rewindIndicator.textContent = rewindSpeed + 'x';
         
         // Обновляем классы для стилизации
-        btnRewindSpeed.className = btnRewindSpeed.className.replace(/speed-\dx/g, '');
         btnForwardSpeed.className = btnForwardSpeed.className.replace(/speed-\dx/g, '');
+        btnRewindSpeed.className = btnRewindSpeed.className.replace(/speed-\dx/g, '');
+        btnForwardSpeed.className = btnForwardSpeed.className.replace(/active/g, '');
+        btnRewindSpeed.className = btnRewindSpeed.className.replace(/active/g, '');
+        btnForwardSpeed.className = btnForwardSpeed.className.replace(/reverse/g, '');
+        btnRewindSpeed.className = btnRewindSpeed.className.replace(/reverse/g, '');
+        
+        btnForwardSpeed.classList.add(`speed-${forwardSpeed}x`);
+        btnRewindSpeed.classList.add(`speed-${rewindSpeed}x`);
         
         if (isReverse) {
-            btnRewindSpeed.classList.add(`speed-${Math.abs(currentSpeed)}x`);
             btnRewindSpeed.classList.add('active');
-            btnForwardSpeed.classList.remove('active');
+            btnRewindSpeed.classList.add('reverse');
+            currentSpeed = -rewindSpeed;
         } else {
-            btnForwardSpeed.classList.add(`speed-${currentSpeed}x`);
             btnForwardSpeed.classList.add('active');
-            btnRewindSpeed.classList.remove('active');
+            currentSpeed = forwardSpeed;
+        }
+        
+        // Обновляем метку текущей скорости
+        if (isReverse) {
+            currentSpeedLabel.innerHTML = `<strong>${rewindSpeed}x назад</strong>`;
+        } else {
+            currentSpeedLabel.innerHTML = `<strong>${forwardSpeed}x вперёд</strong>`;
         }
     }
 
     function changeSpeed(forward = true) {
         if (forward) {
-            isReverse = false;
+            // Сбрасываем скорость назад к 1x
+            rewindSpeed = 1;
+            
+            // Меняем скорость вперед по циклу
             const speeds = [1, 2, 4, 8];
-            const currentIndex = speeds.indexOf(Math.abs(currentSpeed));
-            currentSpeed = speeds[(currentIndex + 1) % speeds.length];
+            const currentIndex = speeds.indexOf(forwardSpeed);
+            forwardSpeed = speeds[(currentIndex + 1) % speeds.length];
+            
+            isReverse = false;
         } else {
+            // Сбрасываем скорость вперед к 1x
+            forwardSpeed = 1;
+            
+            // Меняем скорость назад по циклу
+            const speeds = [1, 2, 4, 8];
+            const currentIndex = speeds.indexOf(rewindSpeed);
+            rewindSpeed = speeds[(currentIndex + 1) % speeds.length];
+            
             isReverse = true;
-            const speeds = [-1, -2, -4, -8];
-            const currentIndex = speeds.indexOf(currentSpeed);
-            currentSpeed = speeds[(currentIndex + 1) % speeds.length];
         }
+        
         updateSpeedDisplay();
         
         if (isPlaying) {
@@ -211,8 +231,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
-    function resetSpeed() {
-        currentSpeed = 1;
+    function resetAllSpeeds() {
+        forwardSpeed = 1;
+        rewindSpeed = 1;
         isReverse = false;
         updateSpeedDisplay();
     }
@@ -326,7 +347,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     function stopAnimation() {
         pauseAnimation();
         currentPathIndex = 0;
-        resetSpeed();
+        resetAllSpeeds();
         resetPaths();
         updateProgress(0);
         btnPlayPause.innerHTML = '<i class="fas fa-play"></i>';
@@ -410,7 +431,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // ========== ИНИЦИАЛИЗАЦИЯ ==========
     await loadFonts();
     setupEventListeners();
-    updateSpeedDisplay(); // Инициализируем отображение скорости
+    updateSpeedDisplay();
     textToPaths(textInput.value.trim());
     
     console.log('Lumen: Система готова с новым проигрывателем!');
