@@ -297,65 +297,152 @@ input[type="color"] {
 }
 
 /* ===== АДАПТИВНОСТЬ ===== */
-@media (max-width: 900px) {
-    .app-container {
-        padding: 18px;
-    }
-    .app-header h1 {
-        font-size: 3.5rem;
-    }
-    .preview-section {
-        min-height: 320px;
-        padding: 20px;
-        margin-bottom: 8px;
-    }
-    #textSvg {
-        height: 250px;
-    }
-    .control-panel {
-        padding: 20px;
-    }
-    .controls-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-    .animation-controls {
-        padding: 15px;
-    }
+/* ===== ПРОИГРЫВАТЕЛЬ ===== */
+.animation-controls {
+    background: rgba(10, 10, 25, 0.9);
+    border-radius: 14px; /* Уменьшено с 18px */
+    padding: 15px; /* Уменьшено с 20px */
+    margin-bottom: 20px; /* Уменьшено с 25px */
+    border: 1px solid rgba(100, 150, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-@media (max-width: 600px) {
-    body {
-        padding: 10px;
-    }
-    .app-header h1 {
-        font-size: 2.8rem;
-    }
-    .tagline {
-        font-size: 1rem;
-    }
-    .preview-section {
-        min-height: 280px;
-        padding: 15px;
-        margin-bottom: 5px;
-    }
-    #textSvg {
-        height: 200px;
-    }
-    .playback-row {
-        gap: 8px;
-    }
-    .control-btn {
-        min-width: 60px;
-        height: 50px;
-        font-size: 1.4rem;
-    }
-    .speed-indicator {
-        font-size: 0.6rem;
-        padding: 1px 4px;
-        bottom: 4px;
-    }
+/* Ползунок прогресса */
+.progress-control {
+    width: 100%;
+    margin-bottom: 15px; /* Уменьшено с 20px */
+}
+
+#progressSlider {
+    width: 100%;
+    height: 8px; /* Уменьшено с 10px */
+    -webkit-appearance: none;
+    appearance: none;
+    background: linear-gradient(90deg, #1a2980 0%, #26d0ce 100%);
+    border-radius: 4px; /* Уменьшено с 5px */
+    outline: none;
+    margin-bottom: 6px; /* Уменьшено с 8px */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#progressSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px; /* Уменьшено с 24px */
+    height: 20px; /* Уменьшено с 24px */
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5); /* Уменьшено */
+    border: 2px solid #26d0ce;
+    transition: all 0.2s ease;
+}
+
+#progressSlider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 12px rgba(38, 208, 206, 0.5); /* Уменьшено */
+}
+
+#progressSlider::-moz-range-thumb {
+    width: 20px; /* Уменьшено с 24px */
+    height: 20px; /* Уменьшено с 24px */
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+    border: 2px solid #26d0ce;
+}
+
+.progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8em; /* Уменьшено с 0.9em */
+    color: #aaa;
+}
+
+.progress-labels span:first-child,
+.progress-labels span:last-child {
+    color: #888;
+}
+
+.progress-labels span:nth-child(2) {
+    color: #26d0ce;
+    font-weight: bold;
+}
+
+/* Кнопки управления */
+.playback-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px; /* Уменьшено с 15px */
+    width: 100%;
+    margin-bottom: 8px; /* Уменьшено с 10px */
+    flex-wrap: nowrap;
+}
+
+.control-btn {
+    flex: 1;
+    min-width: 60px; /* Уменьшено с 70px */
+    height: 45px; /* Уменьшено на 25% с 60px */
+    border-radius: 9px; /* Уменьшено с 12px */
+    background: linear-gradient(145deg, rgba(74, 108, 247, 0.9), rgba(58, 90, 220, 0.9));
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    color: white;
+    font-size: 1.4rem; /* Уменьшено с 1.8rem */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    padding: 0;
+    position: relative;
+}
+
+.control-btn:hover {
+    background: rgba(100, 130, 255, 0.95);
+    transform: translateY(-2px); /* Уменьшено с -3px */
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.control-btn:active {
+    transform: translateY(0);
+}
+
+/* Кнопки скорости с индикатором */
+.speed-btn {
+    flex-direction: column;
+    gap: 3px; /* Уменьшено с 4px */
+}
+
+.speed-indicator {
+    font-size: 0.6rem; /* Уменьшено с 0.7rem */
+    font-weight: bold;
+    color: #2ecc71;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1px 4px; /* Уменьшено с 2px 6px */
+    border-radius: 8px; /* Уменьшено с 10px */
+    position: absolute;
+    bottom: 4px; /* Уменьшено с 6px */
+    min-width: 25px; /* Уменьшено с 30px */
+}
+
+/* Цвета для разных скоростей */
+.speed-1x .speed-indicator { color: #2ecc71; }
+.speed-2x .speed-indicator { color: #f39c12; }
+.speed-4x .speed-indicator { color: #e74c3c; }
+.speed-8x .speed-indicator { color: #9b59b6; }
+
+/* Активная кнопка скорости */
+.speed-btn.active {
+    background: linear-gradient(145deg, rgba(46, 204, 113, 0.9), rgba(39, 174, 96, 0.9));
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 12px rgba(46, 204, 113, 0.3); /* Уменьшено с 15px */
+}
+
+.speed-btn.active.reverse {
+    background: linear-gradient(145deg, rgba(231, 76, 60, 0.9), rgba(192, 57, 43, 0.9));
+}
     .btn-success {
         padding: 12px 24px;
         font-size: 1rem;
