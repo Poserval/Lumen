@@ -18,6 +18,7 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    padding: 0;
 }
 
 .app-container {
@@ -33,58 +34,51 @@ body {
 .app-header {
     flex-shrink: 0;
     text-align: center;
-    padding: 12px 15px;
+    padding: 15px 20px;
     border-bottom: 2px solid rgba(100, 150, 255, 0.3);
-    background: rgba(10, 10, 20, 0.9);
+    background: rgba(10, 10, 20, 0.8);
 }
 
 .app-header h1 {
     font-family: 'Caveat', cursive;
-    font-size: 2.2rem;
+    font-size: 2.8rem;
     background: linear-gradient(90deg, #6a8cff, #4a6cf7, #2ecc71);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
     letter-spacing: 1px;
 }
 
 .tagline {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: #aaa;
     font-weight: 300;
 }
 
-/* ===== ОСНОВНОЙ КОНТЕНТ (РАЗДЕЛЕН НА 75/25) ===== */
+/* ===== ОСНОВНОЙ КОНТЕНТ ===== */
 .main-content {
     flex: 1;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    padding: 15px;
+    gap: 15px;
 }
 
-/* ВЕРХНЯЯ ЧАСТЬ - 75% ПРЕДПРОСМОТР */
-.preview-area {
-    flex: 0 0 75%;
-    display: flex;
-    flex-direction: column;
-    padding: 12px;
-    gap: 12px;
-    min-height: 0;
-}
-
-/* ОКНО ПРЕДПРОСМОТРА */
+/* ===== ОКНО ПРЕДПРОСМОТРА ===== */
 .preview-section {
     flex: 1;
     background: rgba(10, 10, 20, 0.7);
-    border-radius: 14px;
-    padding: 15px;
+    border-radius: 16px;
+    padding: 20px;
     border: 2px solid rgba(100, 150, 255, 0.2);
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
     overflow: hidden;
+    min-height: 0; /* Для правильного flex-растяжения */
 }
 
 .preview-section::before {
@@ -120,17 +114,18 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     color: #888;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     text-align: center;
     width: 100%;
-    padding: 15px;
+    padding: 20px;
 }
 
-/* ПРОИГРЫВАТЕЛЬ */
+/* ===== ПРОИГРЫВАТЕЛЬ ===== */
 .animation-controls {
+    flex-shrink: 0;
     background: rgba(10, 10, 25, 0.9);
     border-radius: 10px;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid rgba(100, 150, 255, 0.3);
     display: flex;
     flex-direction: column;
@@ -140,7 +135,7 @@ body {
 /* Ползунок прогресса */
 .progress-control {
     width: 100%;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 #progressSlider {
@@ -185,7 +180,7 @@ body {
 .progress-labels {
     display: flex;
     justify-content: space-between;
-    font-size: 0.65em;
+    font-size: 0.7em;
     color: #aaa;
 }
 
@@ -203,20 +198,20 @@ body {
 .playback-row {
     display: flex;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     width: 100%;
     flex-wrap: nowrap;
 }
 
 .control-btn {
     flex: 1;
-    min-width: 45px;
-    height: 28px;
+    min-width: 50px;
+    height: 30px;
     border-radius: 6px;
     background: linear-gradient(145deg, rgba(74, 108, 247, 0.9), rgba(58, 90, 220, 0.9));
     border: 1px solid rgba(255, 255, 255, 0.25);
     color: white;
-    font-size: 0.9rem;
+    font-size: 1rem;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -264,124 +259,193 @@ body {
 .speed-btn.active {
     background: linear-gradient(145deg, rgba(46, 204, 113, 0.9), rgba(39, 174, 96, 0.9));
     border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 0 6px rgba(46, 204, 113, 0.3);
+    box-shadow: 0 0 8px rgba(46, 204, 113, 0.3);
 }
 
 .speed-btn.active.reverse {
     background: linear-gradient(145deg, rgba(231, 76, 60, 0.9), rgba(192, 57, 43, 0.9));
 }
 
-/* НИЖНЯЯ ЧАСТЬ - 25% РЕДАКТИРОВАНИЕ */
-.edit-area {
-    flex: 0 0 25%;
-    background: rgba(15, 15, 30, 0.9);
-    border-top: 2px solid rgba(100, 150, 255, 0.2);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+/* ===== КНОПОЧНАЯ СЕТКА 4x3 ===== */
+.button-grid {
+    flex-shrink: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+    height: 180px;
 }
 
-/* ВКЛАДКИ РЕДАКТИРОВАНИЯ */
-.edit-tabs {
-    display: flex;
-    background: rgba(10, 10, 20, 0.8);
-    border-bottom: 1px solid rgba(100, 150, 255, 0.2);
-}
-
-.edit-tab {
-    flex: 1;
+.grid-button {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: transparent;
+    background: linear-gradient(145deg, rgba(74, 108, 247, 0.8), rgba(58, 90, 220, 0.8));
     border: none;
-    color: #aaa;
-    font-size: 0.8rem;
-    padding: 10px 5px;
+    border-radius: 12px;
+    color: white;
+    font-size: 1.4rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    gap: 4px;
+    padding: 12px 5px;
+    position: relative;
+    overflow: hidden;
 }
 
-.edit-tab:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: #ddd;
+.grid-button:hover:not(:disabled) {
+    background: rgba(100, 130, 255, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.edit-tab.active-tab {
-    background: rgba(74, 108, 247, 0.2);
-    color: #4a6cf7;
-    border-bottom: 2px solid #4a6cf7;
+.grid-button:active:not(:disabled) {
+    transform: translateY(0);
 }
 
-.edit-tab i {
-    font-size: 1.2rem;
-    margin-bottom: 2px;
+.grid-button.active-button {
+    background: linear-gradient(145deg, rgba(46, 204, 113, 0.9), rgba(39, 174, 96, 0.9));
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
 }
 
-/* СОДЕРЖАНИЕ ВКЛАДОК */
-.edit-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 15px;
+.grid-button.disabled-button {
+    background: linear-gradient(145deg, rgba(231, 76, 60, 0.6), rgba(192, 57, 43, 0.6));
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
-.tab-content {
-    display: none;
-    flex-direction: column;
-    gap: 15px;
-    height: 100%;
+.grid-button.disabled-button:hover {
+    transform: none;
+    box-shadow: none;
 }
 
-.tab-content.active-tab-content {
-    display: flex;
-}
-
-/* Группы ввода */
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.input-group label {
-    color: #ddd;
-    font-size: 0.85rem;
+.button-label {
+    font-size: 0.7rem;
+    margin-top: 6px;
     font-weight: 500;
+    white-space: nowrap;
+}
+
+/* ===== ПАНЕЛЬ ВВОДА ТЕКСТА ===== */
+.text-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(15, 15, 30, 0.95);
+    backdrop-filter: blur(20px);
+    border-top: 2px solid rgba(100, 150, 255, 0.4);
+    border-radius: 20px 20px 0 0;
+    padding: 20px;
+    z-index: 1000;
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.text-panel.hidden {
+    transform: translateY(100%);
+}
+
+.text-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.text-panel-header h3 {
+    font-size: 1.3rem;
+    color: #fff;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+}
+
+.close-button {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.close-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+.text-panel-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 #textInput {
     width: 100%;
-    min-height: 80px;
-    padding: 12px;
-    border-radius: 10px;
-    border: 2px solid rgba(100, 150, 255, 0.3);
-    background: rgba(0, 0, 0, 0.4);
+    min-height: 120px;
+    padding: 15px;
+    border-radius: 12px;
+    border: 2px solid rgba(100, 150, 255, 0.4);
+    background: rgba(0, 0, 0, 0.5);
     color: #fff;
-    font-size: 1rem;
+    font-size: 1.1rem;
     resize: vertical;
     font-family: 'Segoe UI', sans-serif;
-    line-height: 1.4;
+    line-height: 1.5;
     transition: all 0.3s;
 }
 
 #textInput:focus {
     outline: none;
     border-color: #4a6cf7;
-    box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.3);
+    box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.3);
+}
+
+.text-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.color-thickness-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.control-group label {
+    color: #ccc;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 select, input[type="color"] {
     padding: 10px 12px;
-    border-radius: 8px;
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    background: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.6);
     color: white;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     transition: all 0.3s;
 }
 
@@ -395,123 +459,95 @@ input[type="color"] {
     padding: 4px;
 }
 
-/* Ползунок толщины */
 #widthSlider {
     width: 100%;
     height: 6px;
     -webkit-appearance: none;
     background: linear-gradient(90deg, #4a6cf7, #6a8cff);
-    border-radius: 6px;
+    border-radius: 8px;
     margin-top: 5px;
 }
 
 #widthSlider::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     background: white;
     border: 3px solid #4a6cf7;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 
-/* Кнопки размера текста */
-.size-controls {
-    display: flex;
-    gap: 8px;
-    margin-top: 5px;
-}
-
-.size-btn {
-    flex: 1;
-    padding: 8px 0;
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(0, 0, 0, 0.3);
-    color: #ccc;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.size-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.size-btn.active-size {
-    background: rgba(74, 108, 247, 0.3);
-    border-color: #4a6cf7;
-    color: white;
-}
-
-/* Кнопка применения */
 .apply-button {
     background: linear-gradient(90deg, #27ae60, #2ecc71);
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     color: white;
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 600;
-    padding: 12px;
+    padding: 14px;
     cursor: pointer;
     transition: all 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    margin-top: 5px;
+    gap: 10px;
+    margin-top: 10px;
 }
 
 .apply-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+    box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
 }
 
-/* Сообщения вкладок */
-.effects-message, .export-message {
+/* ===== БАРДЮР С КНОПКАМИ ===== */
+.button-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(10, 10, 20, 0.95);
+    backdrop-filter: blur(20px);
+    border-top: 2px solid rgba(100, 150, 255, 0.3);
+    padding: 12px 20px;
+    z-index: 999;
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+}
+
+.button-bar.hidden {
+    transform: translateY(100%);
+}
+
+.button-bar-content {
     display: flex;
-    flex-direction: column;
+    justify-content: space-around;
     align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: #aaa;
-    gap: 10px;
-    padding: 20px 0;
+    gap: 15px;
 }
 
-.effects-message i, .export-message i {
-    font-size: 2rem;
-    color: #6a8cff;
-    opacity: 0.7;
-}
-
-.effects-message p, .export-message p {
-    font-size: 0.9rem;
-    max-width: 90%;
-}
-
-/* Кнопка экспорта */
-.export-button {
-    width: 100%;
-    background: linear-gradient(90deg, #9b59b6, #8e44ad);
+.bar-button {
+    background: rgba(231, 76, 60, 0.6);
     border: none;
     border-radius: 10px;
+    width: 50px;
+    height: 50px;
     color: white;
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding: 12px;
+    font-size: 1.3rem;
     cursor: not-allowed;
-    opacity: 0.5;
-    transition: all 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    margin-top: 15px;
+    opacity: 0.7;
+    transition: all 0.2s ease;
 }
 
-/* СКРЫТЫЕ ЭЛЕМЕНТЫ */
+.bar-button.disabled-button {
+    background: linear-gradient(145deg, rgba(231, 76, 60, 0.6), rgba(192, 57, 43, 0.6));
+}
+
+/* ===== СКРЫТЫЕ ЭЛЕМЕНТЫ ===== */
 .hidden {
     display: none !important;
 }
@@ -519,36 +555,26 @@ input[type="color"] {
 /* ===== АДАПТИВНОСТЬ ===== */
 @media (max-width: 600px) {
     .app-header h1 {
-        font-size: 1.8rem;
+        font-size: 2.2rem;
     }
     
     .tagline {
-        font-size: 0.7rem;
-    }
-    
-    .preview-area {
-        padding: 10px;
-        gap: 10px;
+        font-size: 0.8rem;
     }
     
     .preview-section {
-        padding: 12px;
-        border-radius: 12px;
-    }
-    
-    .fallback-text {
-        font-size: 1rem;
-        padding: 10px;
+        padding: 15px;
+        border-radius: 14px;
     }
     
     .animation-controls {
-        padding: 8px;
+        padding: 10px;
     }
     
     .control-btn {
-        min-width: 40px;
-        height: 26px;
-        font-size: 0.8rem;
+        min-width: 45px;
+        height: 28px;
+        font-size: 0.9rem;
     }
     
     .speed-indicator {
@@ -558,52 +584,59 @@ input[type="color"] {
         min-width: 18px;
     }
     
-    .edit-tab {
-        padding: 8px 3px;
-        font-size: 0.7rem;
+    .button-grid {
+        height: 160px;
+        gap: 8px;
     }
     
-    .edit-tab i {
-        font-size: 1rem;
+    .grid-button {
+        padding: 10px 3px;
+        font-size: 1.2rem;
+        border-radius: 10px;
     }
     
-    .edit-content {
-        padding: 12px;
+    .button-label {
+        font-size: 0.65rem;
+        margin-top: 5px;
     }
     
-    #textInput {
-        min-height: 70px;
-        padding: 10px;
-        font-size: 0.9rem;
+    .text-panel {
+        padding: 15px;
     }
     
-    .apply-button {
-        padding: 10px;
-        font-size: 0.85rem;
+    .color-thickness-group {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .button-bar-content {
+        gap: 10px;
+    }
+    
+    .bar-button {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
     }
 }
 
 @media (max-width: 400px) {
-    .app-header h1 {
-        font-size: 1.6rem;
+    .button-grid {
+        height: 140px;
     }
     
-    .control-btn {
-        min-width: 35px;
-        height: 24px;
-        font-size: 0.75rem;
+    .grid-button {
+        font-size: 1.1rem;
+        padding: 8px 2px;
     }
     
-    .edit-content {
-        padding: 10px;
+    .button-label {
+        font-size: 0.6rem;
     }
     
-    .input-group label {
-        font-size: 0.8rem;
+    .bar-button {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
     }
-    
-    #textInput {
-        min-height: 60px;
-        font-size: 0.85rem;
     }
-                           }
