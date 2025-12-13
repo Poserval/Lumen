@@ -191,7 +191,7 @@ body {
     justify-content: center;
     gap: 15px;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 10px; /* Уменьшил отступ */
     flex-wrap: nowrap;
 }
 
@@ -239,27 +239,6 @@ body {
     position: absolute;
     bottom: 6px;
     min-width: 30px;
-}
-
-/* Отображение текущей скорости */
-.speed-display {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    width: 100%;
-    text-align: center;
-}
-
-#currentSpeedLabel {
-    font-size: 1.1rem;
-    color: #ddd;
-}
-
-#currentSpeedLabel strong {
-    color: #4a6cf7;
-    font-size: 1.3rem;
 }
 
 /* Цвета для разных скоростей */
@@ -489,16 +468,6 @@ input[type="color"] {
         font-size: 0.6rem;
         padding: 1px 4px;
         bottom: 4px;
-    }
-    .speed-display {
-        font-size: 0.9rem;
-        padding: 8px 12px;
-    }
-    #currentSpeedLabel {
-        font-size: 1rem;
-    }
-    #currentSpeedLabel strong {
-        font-size: 1.1rem;
     }
     .btn-success {
         padding: 12px 24px;
