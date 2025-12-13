@@ -17,103 +17,91 @@
             <p class="tagline">ПИШЕМ ТЕКСТ КАК РУЧКОЙ</p>
         </header>
 
-        <!-- ОСНОВНОЙ КОНТЕНТ -->
-        <main class="main-content">
-            <!-- ВЕРХНЯЯ ЧАСТЬ - 75% ПРЕДПРОСМОТР -->
-            <div class="preview-section">
-                <div class="preview-container">
-                    <svg id="textSvg" width="100%" height="100%" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet"></svg>
-                    <p id="fallbackText" class="fallback-text">Загружаю шрифт...</p>
-                </div>
+        <!-- ПРЕДПРОСМОТР (75%) -->
+        <div class="preview-container">
+            <svg id="textSvg" width="100%" height="100%" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet"></svg>
+            <p id="fallbackText" class="fallback-text">Загружаю шрифт...</p>
+        </div>
+
+        <!-- ПАНЕЛЬ РЕДАКТИРОВАНИЯ (25%) -->
+        <div class="edit-panel">
+            <!-- ВКЛАДКИ -->
+            <div class="edit-tabs">
+                <button id="tabText" class="edit-tab active-tab">
+                    <i class="fas fa-font"></i>
+                    <span>Текст</span>
+                </button>
+                <button id="tabStyle" class="edit-tab">
+                    <i class="fas fa-palette"></i>
+                    <span>Стиль</span>
+                </button>
+                <button id="tabEffects" class="edit-tab">
+                    <i class="fas fa-magic"></i>
+                    <span>Эффекты</span>
+                </button>
             </div>
 
-            <!-- РАЗДЕЛИТЕЛЬ -->
-            <div class="divider"></div>
+            <!-- СОДЕРЖАНИЕ ВКЛАДОК -->
+            <div class="edit-content">
+                <!-- ТЕКСТ -->
+                <div id="textContent" class="tab-content active-tab-content">
+                    <textarea id="textInput" placeholder="Введите текст...">Lumen</textarea>
+                    <div class="font-control">
+                        <label for="fontSelect"><i class="fas fa-paint-brush"></i> Шрифт:</label>
+                        <select id="fontSelect"></select>
+                    </div>
+                </div>
 
-            <!-- НИЖНЯЯ ЧАСТЬ - 25% РЕДАКТИРОВАНИЕ -->
-            <div class="edit-section">
-                <!-- ВКЛАДКИ РЕДАКТИРОВАНИЯ -->
-                <div class="edit-tabs">
-                    <button id="tabText" class="edit-tab active-tab">
-                        <i class="fas fa-font"></i>
-                        <span>Текст</span>
-                    </button>
-                    <button id="tabStyle" class="edit-tab">
-                        <i class="fas fa-palette"></i>
-                        <span>Стиль</span>
-                    </button>
-                    <button id="tabEffects" class="edit-tab">
+                <!-- СТИЛЬ -->
+                <div id="styleContent" class="tab-content">
+                    <div class="style-control">
+                        <label for="colorPicker"><i class="fas fa-palette"></i> Цвет:</label>
+                        <input type="color" id="colorPicker" value="#4a6cf7">
+                    </div>
+                    <div class="style-control">
+                        <label for="widthSlider"><i class="fas fa-sliders-h"></i> Толщина: <span id="widthValue">3</span>px</label>
+                        <input type="range" id="widthSlider" min="1" max="10" value="3">
+                    </div>
+                </div>
+
+                <!-- ЭФФЕКТЫ -->
+                <div id="effectsContent" class="tab-content">
+                    <div class="effects-placeholder">
                         <i class="fas fa-magic"></i>
-                        <span>Эффекты</span>
-                    </button>
-                </div>
-
-                <!-- СОДЕРЖАНИЕ ВКЛАДОК -->
-                <div class="edit-content">
-                    <!-- ВКЛАДКА ТЕКСТА -->
-                    <div id="textContent" class="tab-content active-tab-content">
-                        <div class="input-group">
-                            <textarea id="textInput" placeholder="Введите текст для рисования...">Lumen</textarea>
-                        </div>
-                        <div class="input-group">
-                            <label for="fontSelect"><i class="fas fa-paint-brush"></i> Шрифт:</label>
-                            <select id="fontSelect"></select>
-                        </div>
-                    </div>
-
-                    <!-- ВКЛАДКА СТИЛЯ -->
-                    <div id="styleContent" class="tab-content">
-                        <div class="input-group">
-                            <label for="colorPicker"><i class="fas fa-palette"></i> Цвет:</label>
-                            <input type="color" id="colorPicker" value="#4a6cf7">
-                        </div>
-                        <div class="input-group">
-                            <label for="widthSlider"><i class="fas fa-sliders-h"></i> Толщина: <span id="widthValue">3</span>px</label>
-                            <input type="range" id="widthSlider" min="1" max="10" value="3">
-                        </div>
-                    </div>
-
-                    <!-- ВКЛАДКА ЭФФЕКТОВ -->
-                    <div id="effectsContent" class="tab-content">
-                        <div class="effects-message">
-                            <i class="fas fa-magic"></i>
-                            <p>Эффекты будут доступны в следующем обновлении</p>
-                        </div>
+                        <p>Эффекты скоро будут</p>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- ПРОИГРЫВАТЕЛЬ -->
-            <div class="animation-controls">
-                <!-- Ползунок прогресса -->
-                <div class="progress-control">
-                    <input type="range" id="progressSlider" min="0" max="1000" value="0">
-                    <div class="progress-labels">
-                        <span>0%</span>
-                        <span id="progressValue">0%</span>
-                        <span>100%</span>
-                    </div>
-                </div>
-                
-                <!-- Кнопки управления -->
-                <div class="playback-row">
-                    <button id="btnRewindSpeed" class="control-btn speed-btn" title="Медленнее (1x)">
-                        <i class="fas fa-backward"></i>
-                        <span class="speed-indicator">1x</span>
-                    </button>
-                    <button id="btnPlayPause" class="control-btn" title="Воспроизвести/Пауза">
-                        <i class="fas fa-play"></i>
-                    </button>
-                    <button id="btnForwardSpeed" class="control-btn speed-btn" title="Быстрее (1x)">
-                        <i class="fas fa-forward"></i>
-                        <span class="speed-indicator">1x</span>
-                    </button>
-                    <button id="btnStop" class="control-btn" title="Стоп (сброс скорости)">
-                        <i class="fas fa-stop"></i>
-                    </button>
+        <!-- ПРОИГРЫВАТЕЛЬ -->
+        <div class="player-panel">
+            <div class="progress-control">
+                <input type="range" id="progressSlider" min="0" max="1000" value="0">
+                <div class="progress-labels">
+                    <span>0%</span>
+                    <span id="progressValue">0%</span>
+                    <span>100%</span>
                 </div>
             </div>
-        </main>
+            
+            <div class="player-buttons">
+                <button id="btnRewindSpeed" class="player-btn speed-btn" title="Медленнее">
+                    <i class="fas fa-backward"></i>
+                    <span class="speed-indicator">1x</span>
+                </button>
+                <button id="btnPlayPause" class="player-btn" title="Воспроизвести">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button id="btnForwardSpeed" class="player-btn speed-btn" title="Быстрее">
+                    <i class="fas fa-forward"></i>
+                    <span class="speed-indicator">1x</span>
+                </button>
+                <button id="btnStop" class="player-btn" title="Стоп">
+                    <i class="fas fa-stop"></i>
+                </button>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
