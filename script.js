@@ -10,14 +10,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     const svgContainer = document.getElementById('textSvg');
     const fallbackText = document.getElementById('fallbackText');
     
-    // Элементы управления (новые)
+    // Элементы управления
     const btnPlayPause = document.getElementById('btnPlayPause');
     const btnStop = document.getElementById('btnStop');
     const btnRewindSpeed = document.getElementById('btnRewindSpeed');
     const btnForwardSpeed = document.getElementById('btnForwardSpeed');
     const progressSlider = document.getElementById('progressSlider');
     const progressValue = document.getElementById('progressValue');
-    const currentSpeedLabel = document.getElementById('currentSpeedLabel');
     const downloadBtn = document.getElementById('downloadBtn');
 
     // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
@@ -28,11 +27,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     let isPlaying = false;
     let currentPathIndex = 0;
     let totalDuration = 0;
-    let currentSpeed = 1; // 1x, 2x, 4x, 8x
-    let forwardSpeed = 1; // скорость для кнопки вперед
-    let rewindSpeed = 1; // скорость для кнопки назад
-    let baseSpeed = 200; // базовая скорость в мс/буква
-    let isReverse = false; // направление анимации
+    let currentSpeed = 1;
+    let forwardSpeed = 1;
+    let rewindSpeed = 1;
+    let baseSpeed = 200;
+    let isReverse = false;
     let currentFontName = '';
 
     // ========== ЗАГРУЗКА ШРИФТОВ ==========
@@ -173,12 +172,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         rewindIndicator.textContent = rewindSpeed + 'x';
         
         // Обновляем классы для стилизации
-        btnForwardSpeed.className = btnForwardSpeed.className.replace(/speed-\dx/g, '');
-        btnRewindSpeed.className = btnRewindSpeed.className.replace(/speed-\dx/g, '');
-        btnForwardSpeed.className = btnForwardSpeed.className.replace(/active/g, '');
-        btnRewindSpeed.className = btnRewindSpeed.className.replace(/active/g, '');
-        btnForwardSpeed.className = btnForwardSpeed.className.replace(/reverse/g, '');
-        btnRewindSpeed.className = btnRewindSpeed.className.replace(/reverse/g, '');
+        btnForwardSpeed.className = 'control-btn speed-btn';
+        btnRewindSpeed.className = 'control-btn speed-btn';
         
         btnForwardSpeed.classList.add(`speed-${forwardSpeed}x`);
         btnRewindSpeed.classList.add(`speed-${rewindSpeed}x`);
@@ -191,35 +186,20 @@ document.addEventListener('DOMContentLoaded', async function() {
             btnForwardSpeed.classList.add('active');
             currentSpeed = forwardSpeed;
         }
-        
-        // Обновляем метку текущей скорости
-        if (isReverse) {
-            currentSpeedLabel.innerHTML = `<strong>${rewindSpeed}x назад</strong>`;
-        } else {
-            currentSpeedLabel.innerHTML = `<strong>${forwardSpeed}x вперёд</strong>`;
-        }
     }
 
     function changeSpeed(forward = true) {
         if (forward) {
-            // Сбрасываем скорость назад к 1x
             rewindSpeed = 1;
-            
-            // Меняем скорость вперед по циклу
             const speeds = [1, 2, 4, 8];
             const currentIndex = speeds.indexOf(forwardSpeed);
             forwardSpeed = speeds[(currentIndex + 1) % speeds.length];
-            
             isReverse = false;
         } else {
-            // Сбрасываем скорость вперед к 1x
             forwardSpeed = 1;
-            
-            // Меняем скорость назад по циклу
             const speeds = [1, 2, 4, 8];
             const currentIndex = speeds.indexOf(rewindSpeed);
             rewindSpeed = speeds[(currentIndex + 1) % speeds.length];
-            
             isReverse = true;
         }
         
@@ -238,7 +218,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         updateSpeedDisplay();
     }
 
-    // ========== АНИМАЦИЯ ==========
+    // ========== ПРОГРЕСС И ПЕРЕМОТКА ==========
     function calculateCurrentProgress() {
         if (textPaths.length === 0) return 0;
         return (currentPathIndex / textPaths.length) * 1000;
@@ -253,22 +233,18 @@ document.addEventListener('DOMContentLoaded', async function() {
         const progress = value / 1000;
         currentPathIndex = Math.floor(progress * textPaths.length);
         
-        // Ограничиваем индекс
         currentPathIndex = Math.max(0, Math.min(currentPathIndex, textPaths.length));
         
-        // Сбрасываем все пути
         textPaths.forEach(path => {
             const length = path.length;
             path.element.style.strokeDasharray = length;
             path.element.style.strokeDashoffset = length;
         });
         
-        // Прорисовываем все пути до текущего индекса
         for (let i = 0; i < currentPathIndex; i++) {
             textPaths[i].element.style.strokeDashoffset = 0;
         }
         
-        // Если мы на паузе, показываем текущий путь частично
         if (currentPathIndex < textPaths.length && !isPlaying) {
             const currentPath = textPaths[currentPathIndex];
             const partialProgress = (progress * textPaths.length) - currentPathIndex;
@@ -278,6 +254,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         updateProgress(value);
     }
 
+    // ========== АНИМАЦИЯ ==========
     function drawNextPath() {
         if (currentPathIndex >= textPaths.length || currentPathIndex < 0) {
             if (isReverse && currentPathIndex < 0) {
