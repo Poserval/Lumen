@@ -10,14 +10,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     const svgContainer = document.getElementById('textSvg');
     const fallbackText = document.getElementById('fallbackText');
     
-    // Элементы управления
+    // Элементы управления (новые)
     const btnPlayPause = document.getElementById('btnPlayPause');
     const btnStop = document.getElementById('btnStop');
-    const btnRewind = document.getElementById('btnRewind');
-    const btnBack = document.getElementById('btnBack');
-    const btnForward = document.getElementById('btnForward');
-    const speedSlider = document.getElementById('speedSlider');
-    const speedValue = document.getElementById('speedValue');
+    const btnRewindSpeed = document.getElementById('btnRewindSpeed');
+    const btnForwardSpeed = document.getElementById('btnForwardSpeed');
+    const progressSlider = document.getElementById('progressSlider');
+    const progressValue = document.getElementById('progressValue');
+    const currentSpeedLabel = document.getElementById('currentSpeedLabel');
     const downloadBtn = document.getElementById('downloadBtn');
 
     // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
@@ -27,15 +27,20 @@ document.addEventListener('DOMContentLoaded', async function() {
     let currentAnimation = null;
     let isPlaying = false;
     let currentPathIndex = 0;
-    let animationSpeed = parseInt(speedSlider.value);
+    let totalDuration = 0;
+    let animationStartTime = 0;
+    let animationPauseTime = 0;
+    let currentSpeed = 1; // 1x, 2x, 4x, 8x
+    let baseSpeed = 200; // базовая скорость в мс/буква
+    let isReverse = false; // направление анимации
+    let animationInterval = null;
     let currentFontName = '';
 
-    // ========== ЗАГРУЗКА ШРИФТОВ (ТВОИ ФАЙЛЫ) ==========
+    // ========== ЗАГРУЗКА ШРИФТОВ ==========
     async function loadFonts() {
         console.log('Загрузка шрифтов...');
         fonts = {};
 
-        // ВСЕ ТВОИ ШРИФТЫ
         const fontFiles = [
             { name: 'AlayaRoza', path: 'fonts/AlayaRozaDemo.otf' },
             { name: 'Antarctic', path: 'fonts/Antarctic.otf' },
@@ -44,7 +49,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             { name: 'Caveat', path: 'fonts/Caveat-Regular.ttf' }
         ];
 
-        // Пробуем загрузить каждый
         const loadPromises = fontFiles.map(async (font) => {
             try {
                 fonts[font.name] = await opentype.load(font.path);
@@ -59,14 +63,12 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         await Promise.allSettled(loadPromises);
         
-        // Заполняем выпадающий список ТОЛЬКО загруженными шрифтами
         fontSelect.innerHTML = '';
         for (const fontName in fonts) {
             if (fonts[fontName] !== null) {
                 const option = document.createElement('option');
                 option.value = fontName;
                 
-                // Красивые названия для списка
                 let displayName = fontName;
                 if (fontName === 'AlayaRoza') displayName = 'AlayaRoza (каллиграфия)';
                 if (fontName === 'Antarctic') displayName = 'Antarctic (печатный)';
@@ -79,7 +81,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         }
         
-        // Выбираем первый загруженный шрифт по умолчанию
         const firstLoaded = Object.keys(fonts).find(name => fonts[name] !== null);
         if (firstLoaded) {
             fontSelect.value = firstLoaded;
@@ -96,10 +97,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         svgContainer.innerHTML = '';
         textPaths = [];
         currentPathIndex = 0;
+        totalDuration = 0;
         
         if (!text.trim()) {
             fallbackText.textContent = 'Введите текст для рисования';
             fallbackText.style.display = 'block';
+            updateProgress(0);
             return;
         }
         
@@ -142,14 +145,17 @@ document.addEventListener('DOMContentLoaded', async function() {
                     textPaths.push({
                         element: pathElement,
                         length: length,
-                        char: char
+                        char: char,
+                        index: i
                     });
                     
+                    totalDuration += baseSpeed;
                     x += glyph.advanceWidth * (fontSize / currentFont.unitsPerEm) + letterSpacing;
                 }
             }
             
             svgContainer.setAttribute('viewBox', `0 0 ${x + 100} 300`);
+            updateProgress(0);
             
         } catch (error) {
             console.error('Ошибка создания путей:', error);
@@ -158,9 +164,104 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
-    // ========== АНИМАЦИЯ РИСОВАНИЯ ==========
+    // ========== УПРАВЛЕНИЕ СКОРОСТЬЮ ==========
+    function updateSpeedDisplay() {
+        const speedText = Math.abs(currentSpeed) + 'x';
+        const direction = currentSpeed > 0 ? 'вперёд' : 'назад';
+        currentSpeedLabel.innerHTML = `Скорость: <strong>${speedText} ${direction}</strong>`;
+        
+        // Обновляем индикаторы на кнопках
+        const speedIndicators = document.querySelectorAll('.speed-indicator');
+        speedIndicators.forEach(indicator => {
+            indicator.textContent = Math.abs(currentSpeed) + 'x';
+        });
+        
+        // Обновляем классы для стилизации
+        btnRewindSpeed.className = btnRewindSpeed.className.replace(/speed-\dx/g, '');
+        btnForwardSpeed.className = btnForwardSpeed.className.replace(/speed-\dx/g, '');
+        
+        if (isReverse) {
+            btnRewindSpeed.classList.add(`speed-${Math.abs(currentSpeed)}x`);
+            btnRewindSpeed.classList.add('active');
+            btnForwardSpeed.classList.remove('active');
+        } else {
+            btnForwardSpeed.classList.add(`speed-${currentSpeed}x`);
+            btnForwardSpeed.classList.add('active');
+            btnRewindSpeed.classList.remove('active');
+        }
+    }
+
+    function changeSpeed(forward = true) {
+        if (forward) {
+            isReverse = false;
+            const speeds = [1, 2, 4, 8];
+            const currentIndex = speeds.indexOf(Math.abs(currentSpeed));
+            currentSpeed = speeds[(currentIndex + 1) % speeds.length];
+        } else {
+            isReverse = true;
+            const speeds = [-1, -2, -4, -8];
+            const currentIndex = speeds.indexOf(currentSpeed);
+            currentSpeed = speeds[(currentIndex + 1) % speeds.length];
+        }
+        updateSpeedDisplay();
+        
+        if (isPlaying) {
+            pauseAnimation();
+            setTimeout(startAnimation, 50);
+        }
+    }
+
+    function resetSpeed() {
+        currentSpeed = 1;
+        isReverse = false;
+        updateSpeedDisplay();
+    }
+
+    // ========== АНИМАЦИЯ ==========
+    function calculateCurrentProgress() {
+        if (textPaths.length === 0) return 0;
+        return (currentPathIndex / textPaths.length) * 1000;
+    }
+
+    function updateProgress(value) {
+        progressSlider.value = value;
+        progressValue.textContent = Math.round((value / 10)) + '%';
+    }
+
+    function seekToProgress(value) {
+        const progress = value / 1000;
+        currentPathIndex = Math.floor(progress * textPaths.length);
+        
+        // Ограничиваем индекс
+        currentPathIndex = Math.max(0, Math.min(currentPathIndex, textPaths.length));
+        
+        // Сбрасываем все пути
+        textPaths.forEach(path => {
+            const length = path.length;
+            path.element.style.strokeDasharray = length;
+            path.element.style.strokeDashoffset = length;
+        });
+        
+        // Прорисовываем все пути до текущего индекса
+        for (let i = 0; i < currentPathIndex; i++) {
+            textPaths[i].element.style.strokeDashoffset = 0;
+        }
+        
+        // Если мы на паузе, показываем текущий путь частично
+        if (currentPathIndex < textPaths.length && !isPlaying) {
+            const currentPath = textPaths[currentPathIndex];
+            const partialProgress = (progress * textPaths.length) - currentPathIndex;
+            currentPath.element.style.strokeDashoffset = currentPath.length * (1 - partialProgress);
+        }
+        
+        updateProgress(value);
+    }
+
     function drawNextPath() {
-        if (currentPathIndex >= textPaths.length) {
+        if (currentPathIndex >= textPaths.length || currentPathIndex < 0) {
+            if (isReverse && currentPathIndex < 0) {
+                currentPathIndex = 0;
+            }
             pauseAnimation();
             btnPlayPause.innerHTML = '<i class="fas fa-redo"></i>';
             btnPlayPause.title = 'Начать заново';
@@ -168,18 +269,26 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         
         const path = textPaths[currentPathIndex];
+        const actualSpeed = baseSpeed / Math.abs(currentSpeed);
         
         currentAnimation = anime({
             targets: path.element,
             strokeDashoffset: [anime.setDashoffset, 0],
-            duration: animationSpeed,
+            duration: actualSpeed,
             easing: 'easeInOutSine',
             begin: function() {
                 path.element.style.stroke = colorPicker.value;
                 path.element.style.strokeWidth = widthSlider.value + 'px';
             },
             complete: function() {
-                currentPathIndex++;
+                if (isReverse) {
+                    currentPathIndex--;
+                } else {
+                    currentPathIndex++;
+                }
+                
+                updateProgress(calculateCurrentProgress());
+                
                 if (isPlaying) {
                     setTimeout(drawNextPath, 50);
                 }
@@ -187,14 +296,17 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
-    // ========== УПРАВЛЕНИЕ АНИМАЦИЕЙ ==========
     function startAnimation() {
         if (textPaths.length === 0) {
             textToPaths(textInput.value.trim() || 'Привет');
         }
         
-        if (currentPathIndex >= textPaths.length) {
-            currentPathIndex = 0;
+        if (currentPathIndex >= textPaths.length || currentPathIndex < 0) {
+            if (isReverse) {
+                currentPathIndex = textPaths.length - 1;
+            } else {
+                currentPathIndex = 0;
+            }
             resetPaths();
         }
         
@@ -214,7 +326,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     function stopAnimation() {
         pauseAnimation();
         currentPathIndex = 0;
+        resetSpeed();
         resetPaths();
+        updateProgress(0);
         btnPlayPause.innerHTML = '<i class="fas fa-play"></i>';
         btnPlayPause.title = 'Начать рисование';
     }
@@ -225,54 +339,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             path.element.style.strokeDasharray = length;
             path.element.style.strokeDashoffset = length;
         });
-    }
-
-    function stepBack() {
-        if (currentPathIndex > 0) {
-            currentPathIndex--;
-            resetPaths();
-            
-            for (let i = 0; i < currentPathIndex; i++) {
-                textPaths[i].element.style.strokeDashoffset = 0;
-            }
-            
-            textPaths[currentPathIndex].element.style.strokeDashoffset = 
-                textPaths[currentPathIndex].length;
-                
-            if (isPlaying) pauseAnimation();
-        }
-    }
-
-    function stepForward() {
-        if (currentPathIndex < textPaths.length) {
-            textPaths[currentPathIndex].element.style.strokeDashoffset = 0;
-            currentPathIndex++;
-            
-            if (currentPathIndex < textPaths.length) {
-                textPaths[currentPathIndex].element.style.strokeDashoffset = 
-                    textPaths[currentPathIndex].length;
-            }
-            
-            if (isPlaying) pauseAnimation();
-        }
-    }
-
-    function rewindAnimation() {
-        currentPathIndex = 0;
-        resetPaths();
-        if (isPlaying) {
-            pauseAnimation();
-            setTimeout(startAnimation, 100);
-        }
-    }
-
-    function updateSpeed() {
-        animationSpeed = parseInt(speedSlider.value);
-        speedValue.textContent = animationSpeed;
-        
-        if (isPlaying && currentAnimation) {
-            currentAnimation.duration = animationSpeed;
-        }
     }
 
     // ========== НАСТРОЙКА СОБЫТИЙ ==========
@@ -305,7 +371,12 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         btnPlayPause.addEventListener('click', function() {
             if (currentPathIndex >= textPaths.length && textPaths.length > 0) {
-                rewindAnimation();
+                if (isReverse) {
+                    currentPathIndex = textPaths.length - 1;
+                } else {
+                    currentPathIndex = 0;
+                }
+                resetPaths();
                 setTimeout(startAnimation, 100);
             } else {
                 isPlaying ? pauseAnimation() : startAnimation();
@@ -313,10 +384,24 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
 
         btnStop.addEventListener('click', stopAnimation);
-        btnRewind.addEventListener('click', rewindAnimation);
-        btnBack.addEventListener('click', stepBack);
-        btnForward.addEventListener('click', stepForward);
-        speedSlider.addEventListener('input', updateSpeed);
+        
+        btnRewindSpeed.addEventListener('click', function() {
+            changeSpeed(false);
+        });
+        
+        btnForwardSpeed.addEventListener('click', function() {
+            changeSpeed(true);
+        });
+
+        progressSlider.addEventListener('input', function() {
+            if (isPlaying) pauseAnimation();
+            seekToProgress(parseInt(this.value));
+        });
+
+        progressSlider.addEventListener('change', function() {
+            seekToProgress(parseInt(this.value));
+        });
+
         downloadBtn.addEventListener('click', function() {
             alert('Экспорт в видео будет добавлен в следующем обновлении.');
         });
@@ -325,8 +410,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     // ========== ИНИЦИАЛИЗАЦИЯ ==========
     await loadFonts();
     setupEventListeners();
-    updateSpeed();
+    updateSpeedDisplay(); // Инициализируем отображение скорости
     textToPaths(textInput.value.trim());
     
-    console.log('Lumen: Система готова с новыми шрифтами!');
+    console.log('Lumen: Система готова с новым проигрывателем!');
 });
