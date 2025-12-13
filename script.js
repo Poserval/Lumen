@@ -18,12 +18,15 @@ document.addEventListener('DOMContentLoaded', async function() {
     const progressSlider = document.getElementById('progressSlider');
     const progressValue = document.getElementById('progressValue');
     
-    // Новые элементы интерфейса
-    const textButton = document.getElementById('textButton');
-    const textPanel = document.getElementById('textPanel');
-    const closeTextPanel = document.getElementById('closeTextPanel');
-    const applyText = document.getElementById('applyText');
-    const buttonBar = document.getElementById('buttonBar');
+    // Вкладки
+    const tabText = document.getElementById('tabText');
+    const tabStyle = document.getElementById('tabStyle');
+    const tabEffects = document.getElementById('tabEffects');
+    
+    // Содержимое вкладок
+    const textContent = document.getElementById('textContent');
+    const styleContent = document.getElementById('styleContent');
+    const effectsContent = document.getElementById('effectsContent');
 
     // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
     let fonts = {};
@@ -32,7 +35,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     let currentAnimation = null;
     let isPlaying = false;
     let currentPathIndex = 0;
-    let totalDuration = 0;
     let currentSpeed = 1;
     let forwardSpeed = 1;
     let rewindSpeed = 1;
@@ -101,7 +103,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         svgContainer.innerHTML = '';
         textPaths = [];
         currentPathIndex = 0;
-        totalDuration = 0;
         
         if (!text.trim()) {
             fallbackText.textContent = 'Введите текст для рисования';
@@ -153,7 +154,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                         index: i
                     });
                     
-                    totalDuration += baseSpeed;
                     x += glyph.advanceWidth * (fontSize / currentFont.unitsPerEm) + letterSpacing;
                 }
             }
@@ -339,23 +339,32 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
-    // ========== УПРАВЛЕНИЕ ИНТЕРФЕЙСОМ ==========
-    function showTextPanel() {
-        textPanel.classList.remove('hidden');
-        buttonBar.classList.remove('hidden');
-        // Прокручиваем кнопку "Текст" в сетке
-        textButton.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-
-    function hideTextPanel() {
-        textPanel.classList.add('hidden');
-        buttonBar.classList.add('hidden');
-    }
-
-    function applyTextChanges() {
-        if (isPlaying) pauseAnimation();
-        textToPaths(textInput.value.trim());
-        hideTextPanel();
+    // ========== УПРАВЛЕНИЕ ВКЛАДКАМИ ==========
+    function switchTab(tabName) {
+        // Убираем активный класс со всех вкладок
+        document.querySelectorAll('.edit-tab').forEach(tab => {
+            tab.classList.remove('active-tab');
+        });
+        
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active-tab-content');
+        });
+        
+        // Активируем выбранную вкладку
+        switch(tabName) {
+            case 'text':
+                tabText.classList.add('active-tab');
+                textContent.classList.add('active-tab-content');
+                break;
+            case 'style':
+                tabStyle.classList.add('active-tab');
+                styleContent.classList.add('active-tab-content');
+                break;
+            case 'effects':
+                tabEffects.classList.add('active-tab');
+                effectsContent.classList.add('active-tab-content');
+                break;
+        }
     }
 
     // ========== НАСТРОЙКА СОБЫТИЙ ==========
@@ -371,79 +380,4 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         });
 
-        btnStop.addEventListener('click', stopAnimation);
-        
-        btnRewindSpeed.addEventListener('click', function() {
-            changeSpeed(false);
-        });
-        
-        btnForwardSpeed.addEventListener('click', function() {
-            changeSpeed(true);
-        });
-
-        progressSlider.addEventListener('input', function() {
-            if (isPlaying) pauseAnimation();
-            seekToProgress(parseInt(this.value));
-        });
-
-        progressSlider.addEventListener('change', function() {
-            seekToProgress(parseInt(this.value));
-        });
-
-        // Управление текстом
-        textInput.addEventListener('input', function() {
-            // Обновляем текст в реальном времени
-            if (!isPlaying) {
-                textToPaths(this.value.trim());
-            }
-        });
-
-        fontSelect.addEventListener('change', function() {
-            currentFont = fonts[this.value];
-            currentFontName = this.value;
-            if (isPlaying) pauseAnimation();
-            textToPaths(textInput.value.trim());
-            currentPathIndex = 0;
-        });
-
-        colorPicker.addEventListener('input', function() {
-            textPaths.forEach(path => {
-                path.element.style.stroke = this.value;
-            });
-        });
-
-        widthSlider.addEventListener('input', function() {
-            widthValue.textContent = this.value;
-            textPaths.forEach(path => {
-                path.element.style.strokeWidth = this.value + 'px';
-            });
-        });
-
-        // Управление интерфейсом
-        textButton.addEventListener('click', showTextPanel);
-        closeTextPanel.addEventListener('click', hideTextPanel);
-        applyText.addEventListener('click', applyTextChanges);
-
-        // Закрытие панелей по клику вне их области
-        document.addEventListener('click', function(event) {
-            if (!textPanel.contains(event.target) && 
-                !textButton.contains(event.target) && 
-                !textPanel.classList.contains('hidden')) {
-                hideTextPanel();
-            }
-        });
-
-        // Предотвращаем закрытие при клике внутри панели
-        textPanel.addEventListener('click', function(event) {
-            event.stopPropagation();
-        });
-    }
-
-    // ========== ИНИЦИАЛИЗАЦИЯ ==========
-    await loadFonts();
-    setupEventListeners();
-    updateSpeedDisplay();
-    textToPaths(textInput.value.trim());
-    
-    console.log('Lumen: Новый интерфейс загружен!');
-});
+        btnStop.addEventListener('click',
