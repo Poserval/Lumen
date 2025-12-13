@@ -111,7 +111,7 @@ body {
     margin-top: 5px;
 }
 
-/* ===== НОВЫЙ ПРОИГРЫВАТЕЛЬ ===== */
+/* ===== ПРОИГРЫВАТЕЛЬ ===== */
 .animation-controls {
     background: rgba(10, 10, 25, 0.9);
     border-radius: 18px;
@@ -253,13 +253,13 @@ body {
 }
 
 #currentSpeedLabel {
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: #ddd;
 }
 
 #currentSpeedLabel strong {
     color: #4a6cf7;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
 }
 
 /* Цвета для разных скоростей */
@@ -495,10 +495,10 @@ input[type="color"] {
         padding: 8px 12px;
     }
     #currentSpeedLabel {
-        font-size: 0.9rem;
+        font-size: 1rem;
     }
     #currentSpeedLabel strong {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
     .btn-success {
         padding: 12px 24px;
