@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Lumen - Рисование текста</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
@@ -11,12 +11,15 @@
 </head>
 <body>
     <div class="app-container">
+        <!-- ШАПКА -->
         <header class="app-header">
             <h1><i class="fas fa-pen-nib"></i> LUMEN</h1>
             <p class="tagline">ПИШЕМ ТЕКСТ КАК РУЧКОЙ</p>
         </header>
 
+        <!-- ОСНОВНОЙ КОНТЕНТ -->
         <main class="main-content">
+            <!-- ОКНО ПРЕДПРОСМОТРА -->
             <section class="preview-section">
                 <div class="preview-container">
                     <svg id="textSvg" width="100%" height="100%" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet"></svg>
@@ -24,74 +27,152 @@
                 </div>
             </section>
 
-            <section class="control-panel">
-                <!-- 1. ПРОИГРЫВАТЕЛЬ С НОВЫМ ДИЗАЙНОМ -->
-                <div class="animation-controls">
-                    <!-- Ползунок прогресса -->
-                    <div class="progress-control">
-                        <input type="range" id="progressSlider" min="0" max="1000" value="0">
-                        <div class="progress-labels">
-                            <span>0%</span>
-                            <span id="progressValue">0%</span>
-                            <span>100%</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Кнопки управления -->
-                    <div class="playback-row">
-                        <button id="btnRewindSpeed" class="control-btn speed-btn" title="Скорость назад (1x)">
-                            <i class="fas fa-backward"></i>
-                            <span class="speed-indicator">1x</span>
-                        </button>
-                        <button id="btnPlayPause" class="control-btn" title="Воспроизвести/Пауза">
-                            <i class="fas fa-play"></i>
-                        </button>
-                        <button id="btnForwardSpeed" class="control-btn speed-btn" title="Скорость вперед (1x)">
-                            <i class="fas fa-forward"></i>
-                            <span class="speed-indicator">1x</span>
-                        </button>
-                        <button id="btnStop" class="control-btn" title="Стоп (сброс скорости)">
-                            <i class="fas fa-stop"></i>
-                        </button>
+            <!-- ПРОИГРЫВАТЕЛЬ -->
+            <div class="animation-controls">
+                <!-- Ползунок прогресса -->
+                <div class="progress-control">
+                    <input type="range" id="progressSlider" min="0" max="1000" value="0">
+                    <div class="progress-labels">
+                        <span>0%</span>
+                        <span id="progressValue">0%</span>
+                        <span>100%</span>
                     </div>
                 </div>
-
-                <!-- 2. ПОЛЕ ДЛЯ ВВОДА ТЕКСТА -->
-                <div class="input-group">
-                    <label for="textInput"><i class="fas fa-font"></i> Текст для рисования:</label>
-                    <textarea id="textInput" placeholder="Введите текст (например, Привет)">Lumen</textarea>
-                </div>
-
-                <!-- 3. НАСТРОЙКИ ШРИФТА, ЦВЕТА, ТОЛЩИНЫ -->
-                <div class="controls-grid">
-                    <div class="control-group">
-                        <label for="fontSelect"><i class="fas fa-paint-brush"></i> Шрифт:</label>
-                        <select id="fontSelect"></select>
-                    </div>
-                    <div class="control-group">
-                        <label for="colorPicker"><i class="fas fa-palette"></i> Цвет чернил:</label>
-                        <input type="color" id="colorPicker" value="#4a6cf7">
-                    </div>
-                    <div class="control-group">
-                        <label for="widthSlider"><i class="fas fa-sliders-h"></i> Толщина: <span id="widthValue">3</span>px</label>
-                        <input type="range" id="widthSlider" min="1" max="10" value="3">
-                    </div>
-                </div>
-
-                <!-- 4. КНОПКА СКАЧИВАНИЯ -->
-                <div class="action-buttons">
-                    <button id="downloadBtn" class="btn-success" disabled>
-                        <i class="fas fa-download"></i> Скачать анимацию (скоро)
+                
+                <!-- Кнопки управления -->
+                <div class="playback-row">
+                    <button id="btnRewindSpeed" class="control-btn speed-btn" title="Медленнее (1x)">
+                        <i class="fas fa-backward"></i>
+                        <span class="speed-indicator">1x</span>
+                    </button>
+                    <button id="btnPlayPause" class="control-btn" title="Воспроизвести/Пауза">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button id="btnForwardSpeed" class="control-btn speed-btn" title="Быстрее (1x)">
+                        <i class="fas fa-forward"></i>
+                        <span class="speed-indicator">1x</span>
+                    </button>
+                    <button id="btnStop" class="control-btn" title="Стоп (сброс скорости)">
+                        <i class="fas fa-stop"></i>
                     </button>
                 </div>
-            </section>
-        </main>
+            </div>
 
-        <footer class="app-footer">
-            <p>Использует <a href="https://fonts.google.com/specimen/Caveat" target="_blank">Caveat</a> и <a href="https://animejs.com/" target="_blank">anime.js</a></p>
-        </footer>
+            <!-- КНОПОЧНЫЙ ИНТЕРФЕЙС (4x3) -->
+            <div class="button-grid">
+                <!-- Первый ряд -->
+                <button id="textButton" class="grid-button active-button" title="Ввод текста">
+                    <i class="fas fa-font"></i>
+                    <span class="button-label">Текст</span>
+                </button>
+                <button class="grid-button disabled-button" title="Скоро будет" disabled>
+                    <i class="fas fa-palette"></i>
+                    <span class="button-label">Цвет</span>
+                </button>
+                <button class="grid-button disabled-button" title="Скоро будет" disabled>
+                    <i class="fas fa-paint-brush"></i>
+                    <span class="button-label">Кисть</span>
+                </button>
+                <button class="grid-button disabled-button" title="Скоро будет" disabled>
+                    <i class="fas fa-sliders-h"></i>
+                    <span class="button-label">Настройки</span>
+                </button>
+
+                <!-- Второй ряд -->
+                <button class="grid-button disabled-button" title="Скоро будет" disabled>
+                    <i class="fas fa-expand-alt"></i>
+                    <span class="button-label">Размер</span>
+                </button>
+                <button class="grid-button disabled-button" title="Скоро будет" disabled>
+                    <i class="fas fa-align-left"></i>
+                    <span class="button-label">Выравнивание</span>
+                </button>
+                <button class="grid-button disabled-button" title="Скоро будет" disabled>
+                    <i class="fas fa-layer-group"></i>
+                    <span class="button-label">Слои</span>
+                </button>
+                <button class="grid-button disabled-button" title="Скоро будет" disabled>
+                    <i class="fas fa-magic"></i>
+                    <span class="button-label">Эффекты</span>
+                </button>
+
+                <!-- Третий ряд -->
+                <button class="grid-button disabled-button" title="Скоро будет" disabled>
+                    <i class="fas fa-download"></i>
+                    <span class="button-label">Экспорт</span>
+                </button>
+                <button class="grid-button disabled-button" title="Скоро будет" disabled>
+                    <i class="fas fa-save"></i>
+                    <span class="button-label">Сохранить</span>
+                </button>
+                <button class="grid-button disabled-button" title="Скоро будет" disabled>
+                    <i class="fas fa-share-alt"></i>
+                    <span class="button-label">Поделиться</span>
+                </button>
+                <button class="grid-button disabled-button" title="Скоро будет" disabled>
+                    <i class="fas fa-cog"></i>
+                    <span class="button-label">Система</span>
+                </button>
+            </div>
+
+            <!-- ПАНЕЛЬ ВВОДА ТЕКСТА (скрыта по умолчанию) -->
+            <div id="textPanel" class="text-panel hidden">
+                <div class="text-panel-header">
+                    <h3><i class="fas fa-font"></i> Ввод текста</h3>
+                    <button id="closeTextPanel" class="close-button">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="text-panel-content">
+                    <textarea id="textInput" placeholder="Введите текст для рисования...">Lumen</textarea>
+                    <div class="text-controls">
+                        <div class="control-group">
+                            <label for="fontSelect"><i class="fas fa-paint-brush"></i> Шрифт:</label>
+                            <select id="fontSelect"></select>
+                        </div>
+                        <div class="color-thickness-group">
+                            <div class="control-group">
+                                <label for="colorPicker"><i class="fas fa-palette"></i> Цвет:</label>
+                                <input type="color" id="colorPicker" value="#4a6cf7">
+                            </div>
+                            <div class="control-group">
+                                <label for="widthSlider"><i class="fas fa-sliders-h"></i> Толщина: <span id="widthValue">3</span>px</label>
+                                <input type="range" id="widthSlider" min="1" max="10" value="3">
+                            </div>
+                        </div>
+                    </div>
+                    <button id="applyText" class="apply-button">
+                        <i class="fas fa-check"></i> Применить
+                    </button>
+                </div>
+            </div>
+
+            <!-- БАРДЮР С КНОПКАМИ (скрыт по умолчанию) -->
+            <div id="buttonBar" class="button-bar hidden">
+                <div class="button-bar-content">
+                    <button class="bar-button disabled-button" title="Скоро будет" disabled>
+                        <i class="fas fa-palette"></i>
+                    </button>
+                    <button class="bar-button disabled-button" title="Скоро будет" disabled>
+                        <i class="fas fa-paint-brush"></i>
+                    </button>
+                    <button class="bar-button disabled-button" title="Скоро будет" disabled>
+                        <i class="fas fa-sliders-h"></i>
+                    </button>
+                    <button class="bar-button disabled-button" title="Скоро будет" disabled>
+                        <i class="fas fa-expand-alt"></i>
+                    </button>
+                    <button class="bar-button disabled-button" title="Скоро будет" disabled>
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <button class="bar-button disabled-button" title="Скоро будет" disabled>
+                        <i class="fas fa-layer-group"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
     </div>
 
     <script src="script.js"></script>
 </body>
-</html>
+                        </html>
