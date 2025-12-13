@@ -1,122 +1,9 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #0a0a0f, #1a1a2e, #0f3460);
-    color: #f0f0f0;
-    min-height: 100vh;
-    padding: 20px;
-    overflow-x: hidden;
-}
-
-.app-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    background: rgba(20, 20, 35, 0.85);
-    backdrop-filter: blur(15px);
-    border-radius: 28px;
-    padding: 25px 35px 35px;
-    box-shadow: 0 25px 75px rgba(0, 0, 0, 0.8);
-    border: 1px solid rgba(100, 100, 255, 0.15);
-}
-
-/* ===== ШАПКА ===== */
-.app-header {
-    text-align: center;
-    margin-bottom: 15px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid rgba(100, 150, 255, 0.3);
-}
-
-.app-header h1 {
-    font-family: 'Caveat', cursive;
-    font-size: 4.5rem;
-    background: linear-gradient(90deg, #6a8cff, #4a6cf7, #2ecc71);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    margin-bottom: 10px;
-    letter-spacing: 2px;
-}
-
-.tagline {
-    font-size: 1.1rem;
-    color: #aaa;
-    font-weight: 300;
-}
-
-/* ===== ОКНО ПРЕДПРОСМОТРА ===== */
-.preview-section {
-    background: rgba(10, 10, 20, 0.7);
-    border-radius: 24px;
-    padding: 30px;
-    margin-bottom: 10px;
-    border: 2px solid rgba(100, 150, 255, 0.2);
-    min-height: 380px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.preview-section::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 30% 20%, rgba(74, 108, 247, 0.1) 0%, transparent 70%);
-}
-
-.preview-container {
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-#textSvg {
-    display: block;
-    width: 100%;
-    height: 300px;
-}
-
-#textSvg path {
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    transition: stroke 0.3s ease;
-}
-
-.fallback-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #888;
-    font-size: 1.5rem;
-    text-align: center;
-    width: 100%;
-    padding: 20px;
-}
-
-/* ===== ПАНЕЛЬ УПРАВЛЕНИЯ ===== */
-.control-panel {
-    background: rgba(15, 15, 30, 0.8);
-    border-radius: 24px;
-    padding: 25px;
-    border: 1px solid rgba(100, 150, 255, 0.2);
-    margin-top: 5px;
-}
-
 /* ===== ПРОИГРЫВАТЕЛЬ ===== */
 .animation-controls {
     background: rgba(10, 10, 25, 0.9);
-    border-radius: 18px;
-    padding: 20px;
-    margin-bottom: 25px;
+    border-radius: 14px; /* Уменьшено с 18px */
+    padding: 15px; /* Уменьшено с 20px */
+    margin-bottom: 20px; /* Уменьшено с 25px */
     border: 1px solid rgba(100, 150, 255, 0.3);
     display: flex;
     flex-direction: column;
@@ -126,42 +13,42 @@ body {
 /* Ползунок прогресса */
 .progress-control {
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* Уменьшено с 20px */
 }
 
 #progressSlider {
     width: 100%;
-    height: 10px;
+    height: 8px; /* Уменьшено с 10px */
     -webkit-appearance: none;
     appearance: none;
     background: linear-gradient(90deg, #1a2980 0%, #26d0ce 100%);
-    border-radius: 5px;
+    border-radius: 4px; /* Уменьшено с 5px */
     outline: none;
-    margin-bottom: 8px;
+    margin-bottom: 6px; /* Уменьшено с 8px */
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #progressSlider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 24px;
-    height: 24px;
+    width: 20px; /* Уменьшено с 24px */
+    height: 20px; /* Уменьшено с 24px */
     border-radius: 50%;
     background: white;
     cursor: pointer;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5); /* Уменьшено */
     border: 2px solid #26d0ce;
     transition: all 0.2s ease;
 }
 
 #progressSlider::-webkit-slider-thumb:hover {
     transform: scale(1.1);
-    box-shadow: 0 0 15px rgba(38, 208, 206, 0.5);
+    box-shadow: 0 0 12px rgba(38, 208, 206, 0.5); /* Уменьшено */
 }
 
 #progressSlider::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
+    width: 20px; /* Уменьшено с 24px */
+    height: 20px; /* Уменьшено с 24px */
     border-radius: 50%;
     background: white;
     cursor: pointer;
@@ -171,7 +58,7 @@ body {
 .progress-labels {
     display: flex;
     justify-content: space-between;
-    font-size: 0.9em;
+    font-size: 0.8em; /* Уменьшено с 0.9em */
     color: #aaa;
 }
 
@@ -189,21 +76,21 @@ body {
 .playback-row {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 12px; /* Уменьшено с 15px */
     width: 100%;
-    margin-bottom: 10px; /* Уменьшил отступ */
+    margin-bottom: 8px; /* Уменьшено с 10px */
     flex-wrap: nowrap;
 }
 
 .control-btn {
     flex: 1;
-    min-width: 70px;
-    height: 60px;
-    border-radius: 12px;
+    min-width: 60px; /* Уменьшено с 70px */
+    height: 45px; /* Уменьшено на 25% с 60px */
+    border-radius: 9px; /* Уменьшено с 12px */
     background: linear-gradient(145deg, rgba(74, 108, 247, 0.9), rgba(58, 90, 220, 0.9));
     border: 2px solid rgba(255, 255, 255, 0.25);
     color: white;
-    font-size: 1.8rem;
+    font-size: 1.4rem; /* Уменьшено с 1.8rem */
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -215,7 +102,7 @@ body {
 
 .control-btn:hover {
     background: rgba(100, 130, 255, 0.95);
-    transform: translateY(-3px);
+    transform: translateY(-2px); /* Уменьшено с -3px */
     border-color: rgba(255, 255, 255, 0.5);
 }
 
@@ -226,19 +113,19 @@ body {
 /* Кнопки скорости с индикатором */
 .speed-btn {
     flex-direction: column;
-    gap: 4px;
+    gap: 3px; /* Уменьшено с 4px */
 }
 
 .speed-indicator {
-    font-size: 0.7rem;
+    font-size: 0.6rem; /* Уменьшено с 0.7rem */
     font-weight: bold;
     color: #2ecc71;
     background: rgba(0, 0, 0, 0.3);
-    padding: 2px 6px;
-    border-radius: 10px;
+    padding: 1px 4px; /* Уменьшено с 2px 6px */
+    border-radius: 8px; /* Уменьшено с 10px */
     position: absolute;
-    bottom: 6px;
-    min-width: 30px;
+    bottom: 4px; /* Уменьшено с 6px */
+    min-width: 25px; /* Уменьшено с 30px */
 }
 
 /* Цвета для разных скоростей */
@@ -251,7 +138,7 @@ body {
 .speed-btn.active {
     background: linear-gradient(145deg, rgba(46, 204, 113, 0.9), rgba(39, 174, 96, 0.9));
     border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 0 15px rgba(46, 204, 113, 0.3);
+    box-shadow: 0 0 12px rgba(46, 204, 113, 0.3); /* Уменьшено с 15px */
 }
 
 .speed-btn.active.reverse {
