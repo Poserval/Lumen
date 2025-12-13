@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const svgContainer = document.getElementById('textSvg');
     const fallbackText = document.getElementById('fallbackText');
     
-    // Элементы управления проигрывателем
+    // Элементы проигрывателя
     const btnPlayPause = document.getElementById('btnPlayPause');
     const btnStop = document.getElementById('btnStop');
     const btnRewindSpeed = document.getElementById('btnRewindSpeed');
@@ -176,8 +176,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         forwardIndicator.textContent = forwardSpeed + 'x';
         rewindIndicator.textContent = rewindSpeed + 'x';
         
-        btnForwardSpeed.className = 'control-btn speed-btn';
-        btnRewindSpeed.className = 'control-btn speed-btn';
+        btnForwardSpeed.className = 'player-btn speed-btn';
+        btnRewindSpeed.className = 'player-btn speed-btn';
         
         btnForwardSpeed.classList.add(`speed-${forwardSpeed}x`);
         btnRewindSpeed.classList.add(`speed-${rewindSpeed}x`);
@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         updateSpeedDisplay();
     }
 
-    // ========== ПРОГРЕСС И ПЕРЕМОТКА ==========
+    // ========== ПРОГРЕСС ==========
     function calculateCurrentProgress() {
         if (textPaths.length === 0) return 0;
         return (currentPathIndex / textPaths.length) * 1000;
@@ -339,18 +339,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
-    // ========== УПРАВЛЕНИЕ ВКЛАДКАМИ ==========
+    // ========== ВКЛАДКИ ==========
     function switchTab(tabName) {
-        // Убираем активный класс со всех вкладок
-        document.querySelectorAll('.edit-tab').forEach(tab => {
-            tab.classList.remove('active-tab');
-        });
+        // Убираем активные классы
+        [tabText, tabStyle, tabEffects].forEach(tab => tab.classList.remove('active-tab'));
+        [textContent, styleContent, effectsContent].forEach(content => content.classList.remove('active-tab-content'));
         
-        document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.remove('active-tab-content');
-        });
-        
-        // Активируем выбранную вкладку
+        // Активируем выбранную
         switch(tabName) {
             case 'text':
                 tabText.classList.add('active-tab');
@@ -367,9 +362,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
-    // ========== НАСТРОЙКА СОБЫТИЙ ==========
+    // ========== СОБЫТИЯ ==========
     function setupEventListeners() {
-        // Управление проигрывателем
+        // Проигрыватель
         btnPlayPause.addEventListener('click', function() {
             if (currentPathIndex >= textPaths.length && textPaths.length > 0) {
                 currentPathIndex = 0;
@@ -380,4 +375,38 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         });
 
-        btnStop.addEventListener('click',
+        btnStop.addEventListener('click', stopAnimation);
+        
+        btnRewindSpeed.addEventListener('click', () => changeSpeed(false));
+        btnForwardSpeed.addEventListener('click', () => changeSpeed(true));
+
+        progressSlider.addEventListener('input', function() {
+            if (isPlaying) pauseAnimation();
+            seekToProgress(parseInt(this.value));
+        });
+
+        // Текст
+        textInput.addEventListener('input', function() {
+            if (!isPlaying) {
+                textToPaths(this.value.trim());
+            }
+        });
+
+        fontSelect.addEventListener('change', function() {
+            currentFont = fonts[this.value];
+            currentFontName = this.value;
+            if (isPlaying) pauseAnimation();
+            textToPaths(textInput.value.trim());
+            currentPathIndex = 0;
+        });
+
+        colorPicker.addEventListener('input', function() {
+            textPaths.forEach(path => {
+                path.element.style.stroke = this.value;
+            });
+        });
+
+        widthSlider.addEventListener('input', function() {
+            widthValue.textContent = this.value;
+            textPaths.forEach(path => {
+                path.element.style.strokeWidth =
